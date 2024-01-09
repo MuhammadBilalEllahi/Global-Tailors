@@ -90,7 +90,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     if (pickedFile == null) return;
 
     Uint8List bytes = await pickedFile.readAsBytes();
-    final storageRef2 = firebaseStorage.ref().putData(bytes);
+    // final storageRef2 = firebaseStorage.ref().putData(bytes);
     final storageRef = firebaseStorage
         .ref()
         .child('profile_images/${firebaseAuth.currentUser!.uid}');

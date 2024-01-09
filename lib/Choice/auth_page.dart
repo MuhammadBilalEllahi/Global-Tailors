@@ -4,6 +4,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tailor_flutter/Admob/admob.dart';
 import 'package:tailor_flutter/Common/choosing_screen.dart';
 import 'package:tailor_flutter/Common/my_elevatedbutton.dart';
+import 'package:tailor_flutter/Common/prefs.dart';
 import 'package:tailor_flutter/Tailor/tailor_init.dart';
 
 class AuthPage extends StatefulWidget {
@@ -42,8 +43,11 @@ class _AuthPageState extends State<AuthPage> {
     _createBanner();
     _createInterstellerAd();
     _createRewardedAd();
-    
+    prefInitializer();
+  }
 
+  void prefInitializer() {
+    PreferenceManager.instance.setBool("isFirstTime", false);
   }
 
   void _createRewardedAd(){

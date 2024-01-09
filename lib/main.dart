@@ -4,8 +4,10 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tailor_flutter/Choice/app_start.dart';
 import 'package:tailor_flutter/Choice/auth_page.dart';
+import 'package:tailor_flutter/Common/prefs.dart';
 import 'package:tailor_flutter/FireBase/push_notifications.dart';
 import 'package:tailor_flutter/Tailor/tailor_bottm_navigation.dart';
 import 'package:tailor_flutter/provider.dart';
@@ -22,6 +24,7 @@ void main() async {
   MobileAds.instance.initialize();
 
 
+  await PreferenceManager.initializePrefs();
 
 
 
@@ -36,14 +39,6 @@ void main() async {
 //   androidProvider: AndroidProvider.playIntegrity,
 //     // webRecaptchaSiteKey: 'ADA04DFD-33A0-405E-9DC6-8702C84A23A0',
 //   );
-
-
-
-
-
-
-
-
 
   await FirebaseApi().initNotifications();
 

@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                               // print(widget.showRegisterPage.toString());
                               Navigator.pop(context);
 
-                              Navigator.of(context).pushReplacement(
+                              Navigator.of(context).push(
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           const SignInUpAs()));

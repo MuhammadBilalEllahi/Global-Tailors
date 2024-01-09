@@ -2,10 +2,12 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tailor_flutter/Auth/LoginPage/login.dart';
 import 'package:tailor_flutter/Auth/Registration%20Page/register.dart';
 import 'package:tailor_flutter/Choice/auth_page.dart';
 import 'package:tailor_flutter/Common/choosing_screen.dart';
+import 'package:tailor_flutter/Common/prefs.dart';
 import 'package:tailor_flutter/Customer/Menu%20Scaffold/sideba_menu.dart';
 import 'package:tailor_flutter/Customer/measurement.dart';
 import 'package:tailor_flutter/FireBase/Notification%20Services/notification_services.dart';
@@ -15,6 +17,7 @@ import 'package:tailor_flutter/Tailor/otp.dart';
 import 'package:tailor_flutter/Tailor/tailor_book.dart';
 import 'package:tailor_flutter/Tailor/tailor_bottm_navigation.dart';
 import 'package:tailor_flutter/Tailor/tailor_init.dart';
+
 class Start extends StatefulWidget {
   const Start({super.key});
 
@@ -25,13 +28,15 @@ class Start extends StatefulWidget {
 
 class _StartState extends State<Start> {
   bool showSplashPage = true;
-    // NotificationServices notificationServices = NotificationServices();
-
   
+    // NotificationServices notificationServices = NotificationServices();  
   @override
-  void initState() {
+  void initState()  {
+
     // TODO: implement initState
     super.initState();
+      
+
 
     //TODO uncomment when noticcation services needed
     // notificationServices.requestNotificationPermission();
@@ -65,7 +70,14 @@ class _StartState extends State<Start> {
 
       return SplashStarterPage(showAuthPage: togglePage);
     }
-    else{
+    else {
+      bool isFirstTime = PreferenceManager.instance.getBool("isFirstTime" ) ?? true;
+
+      
+      
+
+      
+
       
       // print(showSplashPage);
 
@@ -73,7 +85,7 @@ class _StartState extends State<Start> {
 
       // return const TailorBottomNavigation();  // tailor  main page
 
-      return  const AuthPage();  // lets get started page
+      return  isFirstTime ? const AuthPage() : const LoginPage(type: "User");  // lets get started page
 
       // return const RegisterPage(type: "Tailor"); //tailor sign up
       
@@ -91,3 +103,5 @@ class _StartState extends State<Start> {
     }
   }
 }
+
+
