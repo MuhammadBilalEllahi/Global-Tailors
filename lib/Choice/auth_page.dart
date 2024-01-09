@@ -5,7 +5,7 @@ import 'package:tailor_flutter/Admob/admob.dart';
 import 'package:tailor_flutter/Common/choosing_screen.dart';
 import 'package:tailor_flutter/Common/my_elevatedbutton.dart';
 import 'package:tailor_flutter/Common/prefs.dart';
-import 'package:tailor_flutter/Tailor/tailor_init.dart';
+import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({

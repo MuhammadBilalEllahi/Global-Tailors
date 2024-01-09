@@ -12,8 +12,8 @@ final locationEditingController = TextEditingController();
 final addressEditingController = TextEditingController();
 final phoneNumberEditingController = TextEditingController();
 
-class TailorStartPage extends StatelessWidget {
-  const TailorStartPage({super.key});
+class TailorCompleteInfo extends StatelessWidget {
+  const TailorCompleteInfo({super.key});
 
   static String otpcode = '';
   @override
@@ -145,7 +145,7 @@ class TailorStartPage extends StatelessWidget {
         verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
         verificationFailed: (FirebaseAuthException e) {},
         codeSent: (String verfictionId, int? resendToken) {
-          TailorStartPage.otpcode = verfictionId;
+          TailorCompleteInfo.otpcode = verfictionId;
         },
         codeAutoRetrievalTimeout: (String verificationID) {});
   }

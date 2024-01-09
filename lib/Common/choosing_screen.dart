@@ -4,7 +4,7 @@ import 'package:tailor_flutter/Admob/admob.dart';
 import 'package:tailor_flutter/Auth/LoginPage/login.dart';
 import 'package:tailor_flutter/Auth/Registration%20Page/register.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
-import 'package:tailor_flutter/Tailor/tailor_init.dart';
+import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
 
 class SignInUpAs extends StatefulWidget {
  const  SignInUpAs({super.key});

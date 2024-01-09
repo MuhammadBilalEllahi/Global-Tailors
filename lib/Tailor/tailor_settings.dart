@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
-import 'package:tailor_flutter/Tailor/tailor_init.dart';
+import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
 import 'package:tailor_flutter/provider.dart';
 
 class ProfileSettings extends StatefulWidget {

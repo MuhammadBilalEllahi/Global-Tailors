@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tailor_flutter/Tailor/tailor_init.dart';
+import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
 
 class TailorHome extends StatefulWidget {
   const TailorHome({super.key});

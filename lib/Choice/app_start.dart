@@ -16,7 +16,7 @@ import 'package:tailor_flutter/SplashScreen/splash_worker.dart';
 import 'package:tailor_flutter/Tailor/otp.dart';
 import 'package:tailor_flutter/Tailor/tailor_book.dart';
 import 'package:tailor_flutter/Tailor/tailor_bottm_navigation.dart';
-import 'package:tailor_flutter/Tailor/tailor_init.dart';
+import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
 
 class Start extends StatefulWidget {
   const Start({super.key});

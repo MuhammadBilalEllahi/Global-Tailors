@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
 import 'package:tailor_flutter/Tailor/all_chats_tailor.dart';
 import 'package:tailor_flutter/Tailor/tailor_create_post.dart';
-import 'package:tailor_flutter/Tailor/tailor_init.dart';
+import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
 import 'package:tailor_flutter/Tailor/tailor_notifications.dart';
 import 'package:tailor_flutter/Tailor/tailor_post_screen.dart';
 import 'package:tailor_flutter/Tailor/tailor_previous_orders.dart';

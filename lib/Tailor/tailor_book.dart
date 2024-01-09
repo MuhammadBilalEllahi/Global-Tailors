@@ -4,7 +4,7 @@ import 'package:tailor_flutter/Common/my_elevatedbutton.dart';
 import 'package:tailor_flutter/Common/my_textfield.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
 import 'package:tailor_flutter/Tailor/tailor_bottm_navigation.dart';
-import 'package:tailor_flutter/Tailor/tailor_init.dart';
+import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
 
 class TailorBook extends StatefulWidget {
   const TailorBook({super.key});
