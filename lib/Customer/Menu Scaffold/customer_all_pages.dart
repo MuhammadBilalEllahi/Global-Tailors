@@ -5,7 +5,7 @@ import 'package:tailor_flutter/Customer/Orders/active_orders.dart';
 import 'package:tailor_flutter/Customer/Orders/previous_orders.dart';
 import 'package:tailor_flutter/Customer/customer_search_tailors.dart';
 import 'package:tailor_flutter/Customer/measurement.dart';
-import 'package:tailor_flutter/Tailor/tailor_settings.dart';
+import 'package:tailor_flutter/Common/profile_settings.dart';
 
 class CustomerStartPage extends StatefulWidget {
   const CustomerStartPage({super.key});

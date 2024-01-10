@@ -94,6 +94,7 @@ class TailorCompleteInfo extends StatelessWidget {
                   label: 'Next',
                   fontSize: 18,
                   onPressed: () {
+
                     
                     print({
                       "tailor_name": tailorNameEditingController.text,
@@ -104,6 +105,9 @@ class TailorCompleteInfo extends StatelessWidget {
                     });
                                       
                     if (_validateForm()) {
+                      firebaseAuth.currentUser!.updateDisplayName(tailorNameEditingController.text);
+                      // firebaseAuth.currentUser!.updatePhoneNumber(phoneNumberEditingController.text);
+                      // firebaseAuth.currentUser.linkWithCredential()
                       firestore
                       .collection('users')
                       .doc(firebaseAuth.currentUser!.uid)
@@ -138,6 +142,8 @@ class TailorCompleteInfo extends StatelessWidget {
       ),
     );
   }
+
+  
 
   verifyPhone(phoneNumber) async {
     firebaseAuth.verifyPhoneNumber(

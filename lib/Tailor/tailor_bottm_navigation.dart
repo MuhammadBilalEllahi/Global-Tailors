@@ -8,7 +8,7 @@ import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
 import 'package:tailor_flutter/Tailor/tailor_notifications.dart';
 import 'package:tailor_flutter/Tailor/tailor_post_screen.dart';
 import 'package:tailor_flutter/Tailor/tailor_previous_orders.dart';
-import 'package:tailor_flutter/Tailor/tailor_settings.dart';
+import 'package:tailor_flutter/Common/profile_settings.dart';
 
 class TailorBottomNavigation extends StatefulWidget {
   const TailorBottomNavigation({super.key});

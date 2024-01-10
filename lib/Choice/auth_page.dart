@@ -66,7 +66,7 @@ class _AuthPageState extends State<AuthPage> {
   void _createBanner() {
     _bannerAd = BannerAd(
         size: AdSize.fullBanner,
-        adUnitId: AdMobService.bannerAdUnitId!,
+        adUnitId: AdMobService.bannerAdUnitId!, 
         listener: AdMobService.bannerAdListener,
         request: const AdRequest())
       ..load();
