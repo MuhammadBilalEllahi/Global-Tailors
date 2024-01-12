@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tailor_flutter/Admob/admob.dart';
@@ -24,12 +23,7 @@ class _AuthPageState extends State<AuthPage> {
   BannerAd? _bannerAd;
   InterstitialAd? _interstitialAd;
   RewardedAd? _rewardedAd;
-   int _rewardedAdScore = 0;
-
-
-
-
-
+  int _rewardedAdScore = 0;
 
   late PageController _controller;
   final int _currentPage = 0;
@@ -50,30 +44,29 @@ class _AuthPageState extends State<AuthPage> {
     PreferenceManager.instance.setBool("isFirstTime", false);
   }
 
-  void _createRewardedAd(){
-    RewardedAd.load(adUnitId: AdMobService.rewardedAdUnitId!, request: const AdRequest(),
-     rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (ad)=> setState(() {
-       _rewardedAd = ad;
-     }),
-    
-      onAdFailedToLoad: (ad)=> setState(() {
-        _rewardedAd = null;
-      })
-
-     ));    
+  void _createRewardedAd() {
+    RewardedAd.load(
+        adUnitId: AdMobService.rewardedAdUnitId!,
+        request: const AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) => setState(() {
+                  _rewardedAd = ad;
+                }),
+            onAdFailedToLoad: (ad) => setState(() {
+                  _rewardedAd = null;
+                })));
   }
 
   void _createBanner() {
     _bannerAd = BannerAd(
         size: AdSize.fullBanner,
-        adUnitId: AdMobService.bannerAdUnitId!, 
+        adUnitId: AdMobService.bannerAdUnitId!,
         listener: AdMobService.bannerAdListener,
         request: const AdRequest())
       ..load();
   }
 
-
-    void _createInterstellerAd() {
+  void _createInterstellerAd() {
     InterstitialAd.load(
         adUnitId: AdMobService.interstitialAdUnitId!,
         request: const AdRequest(),
@@ -91,45 +84,40 @@ class _AuthPageState extends State<AuthPage> {
         ));
   }
 
-  void _showInterstellerAd(){
-    if(_interstitialAd != null ){
+  void _showInterstellerAd() {
+    if (_interstitialAd != null) {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (ad) {
           ad.dispose();
           _createInterstellerAd();
-
         },
-
-        onAdFailedToShowFullScreenContent: (ad,error){
+        onAdFailedToShowFullScreenContent: (ad, error) {
           ad.dispose();
           _createInterstellerAd();
-        }, 
-
-        
+        },
       );
       _interstitialAd!.show();
       _interstitialAd == null;
     }
-
   }
 
-  void _showRewardedAd(){
-    if(_rewardedAd != null){
+  void _showRewardedAd() {
+    if (_rewardedAd != null) {
       _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdDismissedFullScreenContent: (ad){
+        onAdDismissedFullScreenContent: (ad) {
           ad.dispose();
           _createRewardedAd();
-        }, 
-         onAdFailedToShowFullScreenContent: (ad,error){
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
           ad.dispose();
           _createRewardedAd();
-        }, 
-        
+        },
       );
 
-      _rewardedAd!.show(onUserEarnedReward: (ad,reward)=> setState(() {
-        _rewardedAdScore++;
-      }));
+      _rewardedAd!.show(
+          onUserEarnedReward: (ad, reward) => setState(() {
+                _rewardedAdScore++;
+              }));
       _rewardedAd = null;
     }
   }
@@ -147,29 +135,28 @@ class _AuthPageState extends State<AuthPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-               SizedBox(
-                height: MediaQuery.of(context).size.width/20,
+              SizedBox(
+                height: MediaQuery.of(context).size.width / 20,
               ),
-               Padding(
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextSized(
                   text: "Welcome to Tailor PRO",
-                  fontSize: MediaQuery.of(context).size.width/12,
+                  fontSize: MediaQuery.of(context).size.width / 12,
                 ),
               ),
-               Padding(
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextSized(
-                  text: "Help us Find You Customers",
-                  fontSize: MediaQuery.of(context).size.width/22
-                ),
-              ),
-               SizedBox(
-                height: MediaQuery.of(context).size.width/20,
+                    text: "Help us Find You Customers",
+                    fontSize: MediaQuery.of(context).size.width / 22),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width/1.3,
-                height: MediaQuery.of(context).size.width/2,
+                height: MediaQuery.of(context).size.width / 20,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.3,
+                height: MediaQuery.of(context).size.width / 2,
                 child: PageView(
                   scrollDirection: Axis.horizontal,
                   controller: _controller,
@@ -220,10 +207,9 @@ class _AuthPageState extends State<AuthPage> {
                 padding: const EdgeInsets.all(20.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>  const SignInUpAs()));
-                        
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const SignInUpAs()));
+
                     //  Navigator.of(context).push(MaterialPageRoute(
                     //           builder: (context) => const RegisterPage())
                     //           );
@@ -238,27 +224,28 @@ class _AuthPageState extends State<AuthPage> {
                 ),
               ),
 
-
-
-
-               MyElevatedButtom(label: 'Ad', fontSize: 12, onPressed: (){
-
-                _showInterstellerAd();
-              },),
-                MyElevatedButtom(label: 'Reward Ad', fontSize: 12, onPressed: (){
-
-                _showRewardedAd();
-              },),
+              MyElevatedButtom(
+                label: 'Ad',
+                fontSize: 12,
+                onPressed: () {
+                  _showInterstellerAd();
+                },
+              ),
+              MyElevatedButtom(
+                label: 'Reward Ad',
+                fontSize: 12,
+                onPressed: () {
+                  _showRewardedAd();
+                },
+              ),
               Text("Rewrd $_rewardedAdScore"),
 
+              //  (_bannerAd == null) ? Container() : SizedBox(
+              //                 height: 60,
+              //                 width: 470,
+              //                 child: AdWidget(ad: _bannerAd!),
+              //               ),
 
-            //  (_bannerAd == null) ? Container() : SizedBox(
-            //                 height: 60,
-            //                 width: 470,
-            //                 child: AdWidget(ad: _bannerAd!),
-            //               ), 
-
-             
               // const SizedBox(
               //   height: 10,
               // ),
@@ -281,11 +268,13 @@ class _AuthPageState extends State<AuthPage> {
           ),
         ),
       ),
-      bottomNavigationBar:  (_bannerAd == null) ? Container() : SizedBox(
-                            height: 60,
-                            width: 470,
-                            child: AdWidget(ad: _bannerAd!),
-                          ), 
+      bottomNavigationBar: (_bannerAd == null)
+          ? Container()
+          : SizedBox(
+              height: 60,
+              width: 470,
+              child: AdWidget(ad: _bannerAd!),
+            ),
     );
   }
 }

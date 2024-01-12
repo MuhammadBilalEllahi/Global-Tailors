@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
-import 'package:tailor_flutter/Choice/auth_page.dart';
+import 'package:tailor_flutter/Choice/lets_get_started_page.dart';
 import 'package:tailor_flutter/Customer/Menu%20Scaffold/customer_all_pages.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
 import 'package:tailor_flutter/Tailor/tailor_bottm_navigation.dart';
@@ -48,18 +48,18 @@ class _HiddenMenuDrawerState extends State<HiddenMenuDrawer> {
               name: "Main Page",
               baseStyle: myBaseTextStyle,
               selectedStyle: myActiveTextStyle),
-          const AuthPage()), 
-
-          ScreenHiddenDrawer(
+          const AuthPage()),
+      ScreenHiddenDrawer(
           ItemHiddenMenu(
               colorLineSelected: Colors.grey.shade700,
               name: "Signout",
               baseStyle: myBaseTextStyle,
               selectedStyle: myActiveTextStyle),
-              IconButton(onPressed: (){
+          IconButton(
+              onPressed: () {
                 signout(context);
-              }, icon: const Icon(Icons.logout))
-        )
+              },
+              icon: const Icon(Icons.logout)))
     ];
     // TODO: implement initState
     super.initState();

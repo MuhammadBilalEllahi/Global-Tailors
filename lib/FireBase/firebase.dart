@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tailor_flutter/Choice/auth_page.dart';
+import 'package:tailor_flutter/Choice/lets_get_started_page.dart';
 
 final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -58,32 +58,32 @@ Future signin(textEditingController, passwordEditingController, context) async {
         );
       });
 
-  final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+  final userCredential = await FirebaseAuth.instance
+      .signInWithEmailAndPassword(
     email: textEditingController.text.trim(),
     password: passwordEditingController.text.trim(),
-  ).onError((error, stackTrace){
+  )
+      .onError((error, stackTrace) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Invalid Credentials'),
-            content:
-                const Text('The email or password you entered is incorrect.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); 
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-      throw Exception(error);
-  }
-  );
-
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Invalid Credentials'),
+          content:
+              const Text('The email or password you entered is incorrect.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+    throw Exception(error);
+  });
 
   // Navigator.of(context).pop();
   print('Sign-in successful for ${userCredential.user!.email}');
@@ -285,6 +285,7 @@ Future<String?> getUserType() async {
     return "bnbnb";
   }
 }
+
 Future<UserCredential> signInWithGoogle() async {
   // Trigger the authentication flow
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();

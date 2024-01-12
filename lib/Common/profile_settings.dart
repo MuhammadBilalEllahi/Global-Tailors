@@ -34,19 +34,21 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     // Set isCustomer based on userType
     isTailor = (userType == 'Tailor');
     print("Is it tailor or not > $isTailor");
-    getBookIDSnap().then((value) {
-      print("This is data ? $value");
-      _bookNumberController.text = value.toString();
-    },);
+    getBookIDSnap().then(
+      (value) {
+        print("This is data ? $value");
+        _bookNumberController.text = value.toString();
+      },
+    );
     firebaseAuth.currentUser?.photoURL;
 
     // Initialize controllers with current values
     _displayNameController.text = firebaseAuth.currentUser?.displayName ?? '';
-    _phoneNumberController.text = firebaseAuth.currentUser?.phoneNumber ?? '09924043422';
+    _phoneNumberController.text =
+        firebaseAuth.currentUser?.phoneNumber ?? '09924043422';
     _emailController.text = firebaseAuth.currentUser!.email!;
 
-        super.initState();
-
+    super.initState();
   }
 
   // Add a function to update the user profile
@@ -90,7 +92,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     if (pickedFile == null) return;
 
     Uint8List bytes = await pickedFile.readAsBytes();
-    // final storageRef2 = firebaseStorage.ref().putData(bytes);
+    // final storageRef2 =
+    firebaseStorage.ref().putData(bytes);
     final storageRef = firebaseStorage
         .ref()
         .child('profile_images/${firebaseAuth.currentUser!.uid}');
@@ -298,14 +301,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   }
 }
 
-
 // import 'package:flutter/material.dart';
 // import 'package:tailor_flutter/FireBase/firebase.dart';
 
 // class ProfileSettings extends StatelessWidget {
 //   const ProfileSettings({super.key});
-
-  
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -326,7 +326,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 //               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
 //             ),
 //             const SizedBox(height: 8),
-//              Text( firebaseAuth.currentUser?.phoneNumber ?? "32", 
+//              Text( firebaseAuth.currentUser?.phoneNumber ?? "32",
 //               style: const TextStyle(fontSize: 16, color: Colors.grey),
 //             ),
 //             const SizedBox(height: 16),
@@ -349,12 +349,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 //   }
 // }
 
-
-
-
 // // import 'package:flutter/material.dart';
 // // import 'package:tailor_flutter/FireBase/firebase.dart';
-
 
 // // class ProfileSettings extends StatelessWidget {
 // //   const ProfileSettings({super.key});
@@ -368,7 +364,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 // //           width: MediaQuery.of(context).size.width,
 // //           child:  Column(
 // //             children: [
-// //                 Text(firebaseAuth.currentUser!.uid) 
+// //                 Text(firebaseAuth.currentUser!.uid)
 // //             ],
 // //           )
 // //           )

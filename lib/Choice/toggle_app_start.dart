@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tailor_flutter/Auth/LoginPage/login.dart';
 import 'package:tailor_flutter/Auth/Registration%20Page/register.dart';
-import 'package:tailor_flutter/Choice/auth_page.dart';
+import 'package:tailor_flutter/Choice/lets_get_started_page.dart';
 import 'package:tailor_flutter/Common/choosing_screen.dart';
 import 'package:tailor_flutter/Common/prefs.dart';
 import 'package:tailor_flutter/Customer/Menu%20Scaffold/sideba_menu.dart';
@@ -25,18 +25,14 @@ class Start extends StatefulWidget {
   State<Start> createState() => _StartState();
 }
 
-
 class _StartState extends State<Start> {
   bool showSplashPage = true;
-  
-    // NotificationServices notificationServices = NotificationServices();  
-  @override
-  void initState()  {
 
+  // NotificationServices notificationServices = NotificationServices();
+  @override
+  void initState() {
     // TODO: implement initState
     super.initState();
-      
-
 
     //TODO uncomment when noticcation services needed
     // notificationServices.requestNotificationPermission();
@@ -55,42 +51,37 @@ class _StartState extends State<Start> {
 
   void togglePage() {
     setState(() {
-    // print(showSplashPage);
-    showSplashPage = !showSplashPage;
+      // print(showSplashPage);
+      showSplashPage = !showSplashPage;
 
-    
-    // print(showSplashPage);
-      
+      // print(showSplashPage);
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    if(showSplashPage){
-          // print(showSplashPage);
+    if (showSplashPage) {
+      // print(showSplashPage);
 
       return SplashStarterPage(showAuthPage: togglePage);
-    }
-    else {
-      bool isFirstTime = PreferenceManager.instance.getBool("isFirstTime" ) ?? true;
+    } else {
+      bool isFirstTime =
+          PreferenceManager.instance.getBool("isFirstTime") ?? true;
 
-      
-      
-
-      
-
-      
       // print(showSplashPage);
 
       // return const TailorBook(); // The book id
 
       // return const TailorBottomNavigation();  // tailor  main page
 
-      return  isFirstTime ? const AuthPage() : const LoginPage(type: "User");  // lets get started page
+      return isFirstTime
+          ? const AuthPage()
+          : const LoginPage(type: "User"); // lets get started page
 
       // return const RegisterPage(type: "Tailor"); //tailor sign up
-      
+
       // return const TailorStartPage(); //tailor page with shop info
-      
+
       // return  const  SignInUpAs(); //signup page
 
       // return const LoginPage(type: 'User'); //user login page
@@ -98,10 +89,8 @@ class _StartState extends State<Start> {
       // return const MeasurementCustomer(); // mesaurement page customer
 
       // return OtpPhone(ph: TextEditingController()); //otp page with phone
-      
+
       // return   const HiddenMenuDrawer(); //customer start page
     }
   }
 }
-
-
