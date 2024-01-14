@@ -1,6 +1,3 @@
-
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,7 +17,7 @@ class IndividualPage extends StatefulWidget {
       this.tId,
       this.shopName,
       this.location});
-  final String receiverName;
+  final Widget receiverName;
 
   final String? receiverID;
   final String? tId;
@@ -41,7 +38,7 @@ class _IndividualPageState extends State<IndividualPage> {
   bool sendButton = true;
 
   final ChatService chatService = ChatService();
-    // String userType = Provider.of<UserProvider>().userType!;
+  // String userType = Provider.of<UserProvider>().userType!;
 
   bool isCustomer = false;
   // widget.tId!.isNotEmpty;
@@ -56,17 +53,13 @@ class _IndividualPageState extends State<IndividualPage> {
     }
   }
 
-  
-
   @override
   void initState() {
-
-
     // Access userType in initState
-    String ?userType = Provider.of<UserProvider>(context, listen: false).userType;
+    String? userType =
+        Provider.of<UserProvider>(context, listen: false).userType;
     // Set isCustomer based on userType
     isCustomer = (userType == 'Customer');
-
 
     super.initState();
     focusNodeKeyBoard.addListener(() {
@@ -77,9 +70,6 @@ class _IndividualPageState extends State<IndividualPage> {
       }
     });
   }
-
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -94,16 +84,21 @@ class _IndividualPageState extends State<IndividualPage> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            bottom:  isCustomer ? PreferredSize(
-              preferredSize: Size(MediaQuery.of(context).size.width, 100),
-              child: Card(
-                child: ListTile(
-                  title: Text(widget.shopName!),
-                  subtitle: Text(widget.location!),
-                  trailing: Text(widget.tId!),
-                ),
-              ),
-            ): PreferredSize(preferredSize: const Size(0, 0), child: Container(),),
+            bottom: isCustomer
+                ? PreferredSize(
+                    preferredSize: Size(MediaQuery.of(context).size.width, 100),
+                    child: Card(
+                      child: ListTile(
+                        title: Text(widget.shopName!),
+                        subtitle: Text(widget.location!),
+                        trailing: Text(widget.tId!),
+                      ),
+                    ),
+                  )
+                : PreferredSize(
+                    preferredSize: const Size(0, 0),
+                    child: Container(),
+                  ),
             leadingWidth: 70,
             titleSpacing: 0,
             backgroundColor: const Color.fromARGB(255, 148, 148, 148),
@@ -146,20 +141,19 @@ class _IndividualPageState extends State<IndividualPage> {
   SizedBox ChatBody(BuildContext context) {
     final height = MediaQuery.of(context).size.height / 1.2;
     print("Height >>>>>>>>>>>>> $height");
-    print("Height >>>>>>>>>>>>> ${height + height - MediaQuery.of(context).size.height}");
-    final heightInvert = height + (height - MediaQuery.of(context).size.height)-20;
+    print(
+        "Height >>>>>>>>>>>>> ${height + height - MediaQuery.of(context).size.height}");
+    final heightInvert =
+        height + (height - MediaQuery.of(context).size.height) - 20;
     return SizedBox(
-      
-        height: height+1,
+        height: height + 1,
         width: MediaQuery.of(context).size.width,
         // color: Colors.amber,
         child: WillPopScope(
             child: Stack(
               // fit: StackFit.expand,
               children: [
-                SizedBox(
-                    height: heightInvert ,
-                    child: _buildMessgeList()
+                SizedBox(height: heightInvert, child: _buildMessgeList()
 
                     // ListView(
                     //   shrinkWrap: true,
@@ -241,15 +235,15 @@ class _IndividualPageState extends State<IndividualPage> {
         ? OwnMessageCard(
             name: data['senderEmail'],
             text: data['message'],
-            timestamp: data['timestamp'], 
-            )
+            timestamp: data['timestamp'],
+          )
         : ReplyMessageCard(
             name: data['senderEmail'],
             text: data['message'],
             timestamp: data['timestamp'],
-            isNormal : data['isNormal'] ?? true, 
+            isNormal: data['isNormal'] ?? true,
             uid: widget.receiverID,
-            );
+          );
   }
 
   Align messageBoxRow(BuildContext context) {
@@ -307,24 +301,30 @@ class _IndividualPageState extends State<IndividualPage> {
                           suffixIcon: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              IconButton(
-                                icon: const Icon(Icons.miscellaneous_services),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return   MyDialog(chatService: chatService, receiverID: widget.receiverID!,);
-                                    },
-                                  );
+                              isCustomer
+                                  ? IconButton(
+                                      icon:
+                                          const Icon(Icons.navigation_outlined),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return MyDialog(
+                                              chatService: chatService,
+                                              receiverID: widget.receiverID!,
+                                            );
+                                          },
+                                        );
 
-                                  // showModalBottomSheet(
-                                  //   context: context,
-                                  //   builder: (BuildContext context) {
-                                  //     return  MyBottomSheet();
-                                  //   },
-                                  // );
-                                },
-                              ),
+                                        // showModalBottomSheet(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) {
+                                        //     return  MyBottomSheet();
+                                        //   },
+                                        // );
+                                      },
+                                    )
+                                  : Container(),
                               IconButton(
                                 icon: const Icon(Icons.attach_file),
                                 onPressed: () {
@@ -391,11 +391,12 @@ class _IndividualPageState extends State<IndividualPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(
-              widget.receiverName,
-              style:
-                  const TextStyle(fontSize: 18.5, fontWeight: FontWeight.bold),
-            ),
+            // Text(
+            //   widget.receiverName,
+            //   style:
+            //       const TextStyle(fontSize: 18.5, fontWeight: FontWeight.bold),
+            // ),
+            widget.receiverName,
             const Text(
               "Last seen today at 2:30",
               style: TextStyle(
@@ -519,22 +520,22 @@ Widget iconCreation(IconData icon, String text, Color color) {
       ]));
 }
 
-
 class MeasurementItem {
   final String key;
   final dynamic value;
 
   MeasurementItem({required this.key, required this.value});
-   @override
+  @override
   String toString() {
     return '$key: $value';
   }
 }
 
 class MyDialog extends StatefulWidget {
-  const MyDialog({super.key, required this.chatService, required this.receiverID});
-    final ChatService chatService;
-final String receiverID;
+  const MyDialog(
+      {super.key, required this.chatService, required this.receiverID});
+  final ChatService chatService;
+  final String receiverID;
 
   @override
   _MyDialogState createState() => _MyDialogState();
@@ -556,7 +557,6 @@ class _MyDialogState extends State<MyDialog> {
     // Fetch items from Firestore when the dialog is created
     fetchFirestoreItems();
   }
-  
 
   Future<void> fetchFirestoreItems() async {
     // Replace 'your_collection' with the actual collection name in your Firestore
@@ -570,22 +570,26 @@ class _MyDialogState extends State<MyDialog> {
       // Map Firestore items to a List of MeasurementItem
       firestoreItems = querySnapshot.docs
           .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
-        List<MeasurementItem> items = [];
-        doc.data().forEach((key, value) {
-          items.add(MeasurementItem(key: key, value: value));
-        });
-        return items;
-      }).expand((items) => items).toList();
+            List<MeasurementItem> items = [];
+            doc.data().forEach((key, value) {
+              items.add(MeasurementItem(key: key, value: value));
+            });
+            return items;
+          })
+          .expand((items) => items)
+          .toList();
     });
   }
- void sendMessage() async {
+
+  void sendMessage() async {
     if (selectedItems.isNotEmpty) {
       await widget.chatService
-          .sendMessage(widget.receiverID.toString(), selectedItems.toString(), false )
-          .then((value) {
-      });
+          .sendMessage(
+              widget.receiverID.toString(), selectedItems.toString(), false)
+          .then((value) {});
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -636,16 +640,3 @@ class _MyDialogState extends State<MyDialog> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -18,8 +18,8 @@
 //               child: TextSized(fontSize: 25, text: 'Orders'),
 //             ),
 //             // Expanded(
-//             //   child: 
-            
+//             //   child:
+
 //             // ),
 //             Expanded(
 //               child: ListView.builder(
@@ -70,10 +70,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
 
 class PreviousOrders extends StatelessWidget {
   const PreviousOrders({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,7 @@ class PreviousOrders extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: Colors.grey.shade200,
+        color: Theme.of(context).cardColor,
         child: Column(
           children: [
             const Padding(
@@ -99,61 +99,75 @@ class PreviousOrders extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Text('No orders found.');
+                  return const TextSized(
+                    text: 'No orders found.',
+                    fontSize: 30,
+                  );
                 } else {
                   return Expanded(
                     child: ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         Order order = snapshot.data![index];
-                        return Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading: const CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg'),
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .primaryColorDark
+                                        .withOpacity(0.6),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: ListTile(
+                                  leading: const CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg'),
+                                  ),
+                                  title: FutureBuilder(
+                                    future:
+                                        fetchCustomerEmail(order.customerUid),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Text('Loading...');
+                                      } else if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      } else if (!snapshot.hasData) {
+                                        return const Text('Unknown Customer');
+                                      } else {
+                                        return Column(
+                                          // mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            TextSized(
+                                              text:
+                                                  "${snapshot.data.toString()} ",
+                                              fontSize: 17,
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  trailing: TextSized(
+                                      text: "Book ID : ${order.bookId}",
+                                      fontSize: 18),
+                                  subtitle: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(2, 10, 2, 10),
+                                    child: TextSized(
+                                      text: "Orders \n${order.data}",
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  // trailing: Text(order.timestamp),
                                 ),
-                                title: FutureBuilder(
-                                  future: fetchCustomerEmail(order.customerUid),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const Text('Loading...');
-                                    } else if (snapshot.hasError) {
-                                      return Text('Error: ${snapshot.error}');
-                                    } else if (!snapshot.hasData) {
-                                      return const Text('Unknown Customer');
-                                    } else {
-                                      return Column(
-                                        // mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          
-                                              
-                                          Text(
-                                              "${snapshot.data.toString()} "),
-                                        ],
-                                      );
-                                    }
-                                  },
-                                ),
-                                trailing: Text(
-                                              "Book ID : ${order.bookId}", style: const TextStyle(
-                                                fontSize: 18
-                                              ),),
-                                subtitle: Padding(
-                                  padding: const EdgeInsets.fromLTRB(2, 10, 2, 10),
-                                  child: Text("Orders \n${order.data}", style: const TextStyle(
-                                                  fontSize: 15
-                                                ),),
-                                ),
-                                // trailing: Text(order.timestamp),
                               ),
-                              const Divider()
-                            ],
-                          ),
+                            ),
+                            const Divider()
+                          ],
                         );
                       },
                     ),

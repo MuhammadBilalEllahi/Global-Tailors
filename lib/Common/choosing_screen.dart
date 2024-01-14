@@ -4,10 +4,10 @@ import 'package:tailor_flutter/Admob/admob.dart';
 import 'package:tailor_flutter/Auth/LoginPage/login.dart';
 import 'package:tailor_flutter/Auth/Registration%20Page/register.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
-import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
 
 class SignInUpAs extends StatefulWidget {
- const  SignInUpAs({super.key});
+  const SignInUpAs({super.key});
 
   @override
   State<SignInUpAs> createState() => _SignInUpAsState();
@@ -44,15 +44,14 @@ class _SignInUpAsState extends State<SignInUpAs> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-               SizedBox(
-                height: MediaQuery.of(context).size.width/5,
+              SizedBox(
+                height: MediaQuery.of(context).size.width / 5,
               ),
-               SizedBox(
-                  height: MediaQuery.of(context).size.width/3.5,
+              SizedBox(
+                  height: MediaQuery.of(context).size.width / 3.5,
                   child: TextSized(
-                   text: "Tailor App",
-                    fontSize: MediaQuery.of(context).size.width/8
-                  )),
+                      text: "Tailor App",
+                      fontSize: MediaQuery.of(context).size.width / 8)),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -67,16 +66,13 @@ class _SignInUpAsState extends State<SignInUpAs> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                      child: TextSized(
-                        text: "Sign Up Now",
-                        fontSize: 32),
-                      
+                      child: TextSized(text: "Sign Up Now", fontSize: 32),
                     ),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const RegisterPage(type: "Customer"))
-                              );
+                            builder: (context) =>
+                                const RegisterPage(type: "Customer")));
                       },
                       style: const ButtonStyle(
                           fixedSize: MaterialStatePropertyAll(Size(150, 30)),
@@ -90,9 +86,9 @@ class _SignInUpAsState extends State<SignInUpAs> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                         Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const RegisterPage(type: "Tailor"))
-                              );
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                const RegisterPage(type: "Tailor")));
                       },
                       style: const ButtonStyle(
                           fixedSize: MaterialStatePropertyAll(Size(150, 30)),
@@ -127,37 +123,40 @@ class _SignInUpAsState extends State<SignInUpAs> {
                 child: const Text("Google",
                     style: TextStyle(color: Colors.white, fontSize: 24)),
               ),
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text("Already Have An Account? "),
-                            TextButton(
-                              
-                              
-                                onPressed: () {
-        
-                                  // widget.showLoginPage();
-                                  
-                                  // print(widget.showLoginPage.toString());
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => const LoginPage(type: "User",)));
-                                },
-                                child: const Text("Login Now", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))))
-                          ],
-                        ),
-                      )
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Already Have An Account? "),
+                    TextButton(
+                        onPressed: () {
+                          // widget.showLoginPage();
+
+                          // print(widget.showLoginPage.toString());
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const LoginPage(
+                                    type: "User",
+                                  )));
+                        },
+                        child: const Text("Login Now",
+                            style:
+                                TextStyle(color: Color.fromARGB(255, 0, 0, 0))))
+                  ],
+                ),
+              )
             ],
           ),
         ),
       ),
-      bottomNavigationBar:  (_bannerAd == null) ? Container() : SizedBox(
-                            height: 60,
-                            width: 470,
-                            child: AdWidget(ad: _bannerAd!),
-                          ), 
+      bottomNavigationBar: (_bannerAd == null)
+          ? Container()
+          : SizedBox(
+              height: 60,
+              width: 470,
+              child: AdWidget(ad: _bannerAd!),
+            ),
     );
   }
 }

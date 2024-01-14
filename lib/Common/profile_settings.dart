@@ -3,10 +3,13 @@ import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:tailor_flutter/Common/my_elevatedbutton.dart';
+import 'package:tailor_flutter/Common/my_textfield.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
-import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
 import 'package:tailor_flutter/provider.dart';
 
 class ProfileSettings extends StatefulWidget {
@@ -33,19 +36,23 @@ class _ProfileSettingsState extends State<ProfileSettings> {
         Provider.of<UserProvider>(context, listen: false).userType;
     // Set isCustomer based on userType
     isTailor = (userType == 'Tailor');
-    print("Is it tailor or not > $isTailor");
+    print("Is it tailor > $isTailor");
     getBookIDSnap().then(
       (value) {
-        print("This is data ? $value");
+        print("This is book id ? $value");
         _bookNumberController.text = value.toString();
       },
     );
+    getPhoneNumberTailorSnap().then((value) {
+      print("This is tailor ? $value");
+      _phoneNumberController.text = value.toString();
+    });
     firebaseAuth.currentUser?.photoURL;
 
     // Initialize controllers with current values
     _displayNameController.text = firebaseAuth.currentUser?.displayName ?? '';
     _phoneNumberController.text =
-        firebaseAuth.currentUser?.phoneNumber ?? '09924043422';
+        firebaseAuth.currentUser?.phoneNumber ?? 'No Number Added';
     _emailController.text = firebaseAuth.currentUser!.email!;
 
     super.initState();
@@ -54,6 +61,53 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   // Add a function to update the user profile
   void updateProfile(String displayName, String phoneNumber) {
     firebaseAuth.currentUser!.updateDisplayName(displayName);
+    firestore
+        .collection("users")
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection("tailor_book_number")
+        .doc(firebaseAuth.currentUser!.uid)
+        .update({"book_id": _bookNumberController.text}).then((value) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Book ID Updated'),
+              content: const Text('The data has been updated successfully.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          });
+    });
+    firestore
+        .collection("users")
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection("tailor_info")
+        .doc(firebaseAuth.currentUser!.uid)
+        .update({"tailor_phone_number": _phoneNumberController.text}).then(
+            (value) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Number Updated'),
+              content: const Text('The data has been updated successfully.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          });
+    });
     // firebaseAuth.currentUser!.updatePhoneNumber();
   }
 
@@ -83,46 +137,12 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   //   //   print('No image selected.');
   //   // }
   // }
-  Future<void> _pickImage(ImageSource imageSource) async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: imageSource,
-      imageQuality: 100,
-    );
-
-    if (pickedFile == null) return;
-
-    Uint8List bytes = await pickedFile.readAsBytes();
-    // final storageRef2 =
-    firebaseStorage.ref().putData(bytes);
-    final storageRef = firebaseStorage
-        .ref()
-        .child('profile_images/${firebaseAuth.currentUser!.uid}');
-    final uploadTask = storageRef.putData(bytes);
-
-    await uploadTask.whenComplete(() {
-      print("ok");
-    });
-    uploadTask.onError((error, stackTrace) {
-      print("This here$error");
-      throw Exception();
-    });
-
-    final downloadURL = await storageRef.getDownloadURL();
-    print('Image uploaded. Download URL: $downloadURL');
-
-    setState(() {
-      _selectedImage = File(pickedFile.path);
-    });
-
-    // Update user's photoURL
-    firebaseAuth.currentUser!.updatePhotoURL(downloadURL);
-  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        color: const Color.fromARGB(255, 218, 218, 218),
+        color: Theme.of(context).cardColor.withOpacity(0.8),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(16),
@@ -176,7 +196,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                           text: "Tailor Id : T-${snapshot.data.toString()}",
                           fontSize: 25,
                           textAlign: TextAlign.left,
-                          textColor: Colors.black,
+                          // textColor: Colors.black,
                         );
                       },
                     ),
@@ -184,7 +204,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 : Container(),
             isTailor
                 ? Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.only(left: 2),
                     child: FutureBuilder<String?>(
                       future: getBookIDSnap(),
                       builder: (content, snapshot) {
@@ -194,50 +214,85 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                           text: "Book Id : B-${snapshot.data.toString()}",
                           fontSize: 25,
                           textAlign: TextAlign.left,
-                          textColor: Colors.black,
+                          // textColor: Colors.black,
                         );
                       },
                     ),
                   )
                 : Container(),
-            TextFormField(
-              controller: _displayNameController,
-              decoration: const InputDecoration(
-                labelText: 'Full Name',
-                // Add other decoration properties as needed
-              ),
-            ),
-            TextFormField(
-              controller: _emailController,
-              readOnly: true,
-              decoration: const InputDecoration(
-                labelText: 'Email',
 
-                // Add other decoration properties as needed
-              ),
+            myTextField(
+              validator: null,
+              focus: false,
+              obscureTextBool: false,
+              // keybordType: TextInputType.name,
+              textEditingController: _displayNameController,
+              readOnly: false,
+              height: 70,
+              padZero: 0,
+
+              width: MediaQuery.of(context).size.width,
+
+              label: 'Full Name',
+
+              // Add other decoration properties as needed
+            ),
+            myTextField(
+              validator: null,
+              focus: false,
+              obscureTextBool: false,
+
+              textEditingController: _emailController,
+              readOnly: true,
+              height: 70,
+              padZero: 0,
+
+              width: MediaQuery.of(context).size.width,
+
+              label: 'Email',
+
+              // Add other decoration properties as needed
+            ),
+
+            myTextField(
+              validator: null,
+              focus: false,
+              obscureTextBool: false,
+              keybordType: TextInputType.phone,
+              textEditingController: _phoneNumberController,
+              readOnly: false,
+              height: 70,
+              padZero: 0,
+
+              width: MediaQuery.of(context).size.width,
+
+              label: 'Phone Number',
+
+              // Add other decoration properties as needed
             ),
             const SizedBox(height: 8),
-            TextFormField(
-              controller: _phoneNumberController,
-              decoration: const InputDecoration(
-                labelText: 'Phone Number',
-                // Add other decoration properties as needed
-              ),
-            ),
+
             isTailor
                 ? SizedBox(
-                    width: MediaQuery.of(context).size.width - 10,
-                    height: 80,
+                    // width: MediaQuery.of(context).size.width,
+                    // height: 90,
                     child: Row(
                       children: [
-                        Flexible(
-                          child: TextFormField(
-                            controller: _bookNumberController,
-                            decoration: const InputDecoration(
-                              labelText: 'Book Number',
-                              // Add other decoration properties as needed
-                            ),
-                          ),
+                        myTextField(
+                          validator: null,
+                          focus: false,
+                          obscureTextBool: false,
+                          keybordType: TextInputType.phone,
+                          textEditingController: _bookNumberController,
+                          readOnly: false,
+                          height: 80,
+                          padZero: 0,
+
+                          width: MediaQuery.of(context).size.width - 80,
+
+                          label: 'Book Number',
+
+                          // Add other decoration properties as needed
                         ),
                         IconButton(
                           onPressed: () {
@@ -275,99 +330,62 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   )
                 : Container(),
             const SizedBox(height: 16),
-            ElevatedButton(
+            MyElevatedButtom(
               onPressed: () {
-                // Handle the "Edit Profile" button click
-                // Save the updated values to Firebase or your backend
                 updateProfile(
                   _displayNameController.text,
                   _phoneNumberController.text,
                 );
               },
-              child: const Text('Save Changes'),
+              label: 'Save Changes',
+              fontSize: 13,
             ),
             const SizedBox(height: 16),
-            Text(
-              'User ID: ${firebaseAuth.currentUser?.uid ?? "N/A"}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            _selectedImage != null
-                ? Image.file(_selectedImage!)
-                : const Text("pic"),
+            // Text(
+            //   'User ID: ${firebaseAuth.currentUser?.uid ?? "N/A"}',
+            //   style: const TextStyle(fontSize: 16),
+            // ),
+            // _selectedImage != null
+            //     ? Image.file(_selectedImage!)
+            //     : const Text("pic"),
           ],
         ),
       ),
     );
   }
+
+  Future<void> _pickImage(ImageSource imageSource) async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: imageSource,
+      imageQuality: 100,
+    );
+
+    if (pickedFile == null) return;
+
+    Uint8List bytes = await pickedFile.readAsBytes();
+    // final storageRef2 =
+    firebaseStorage.ref().putData(bytes);
+    final storageRef = firebaseStorage
+        .ref()
+        .child('profile_images/${firebaseAuth.currentUser!.uid}');
+    final uploadTask = storageRef.putData(bytes);
+
+    await uploadTask.whenComplete(() {
+      print("ok");
+    });
+    uploadTask.onError((error, stackTrace) {
+      print("This here$error");
+      throw Exception();
+    });
+
+    final downloadURL = await storageRef.getDownloadURL();
+    print('Image uploaded. Download URL: $downloadURL');
+
+    setState(() {
+      _selectedImage = File(pickedFile.path);
+    });
+
+    // Update user's photoURL
+    firebaseAuth.currentUser!.updatePhotoURL(downloadURL);
+  }
 }
-
-// import 'package:flutter/material.dart';
-// import 'package:tailor_flutter/FireBase/firebase.dart';
-
-// class ProfileSettings extends StatelessWidget {
-//   const ProfileSettings({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SingleChildScrollView(
-//       child: Container(
-//         color: Colors.lightGreen.shade50,
-//         height: MediaQuery.of(context).size.height,
-//         width: MediaQuery.of(context).size.width,
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//              CircleAvatar(
-//               radius: 60,
-//               backgroundImage: NetworkImage(firebaseAuth.currentUser?.photoURL ??   'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg'),
-//             ),
-//              const SizedBox(height: 16),
-//              Text( firebaseAuth.currentUser?.displayName ?? "John Doe",
-//               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//             ),
-//             const SizedBox(height: 8),
-//              Text( firebaseAuth.currentUser?.phoneNumber ?? "32",
-//               style: const TextStyle(fontSize: 16, color: Colors.grey),
-//             ),
-//             const SizedBox(height: 16),
-//             ElevatedButton(
-//               onPressed: () {
-//                 // Handle the "Edit Profile" button click
-//                 // Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfileScreen()));
-//               },
-//               child: const Text('Edit Profile'),
-//             ),
-//             const SizedBox(height: 16),
-//             Text(
-//               firebaseAuth.currentUser!.uid,
-//               style: const TextStyle(fontSize: 16),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// // import 'package:flutter/material.dart';
-// // import 'package:tailor_flutter/FireBase/firebase.dart';
-
-// // class ProfileSettings extends StatelessWidget {
-// //   const ProfileSettings({super.key});
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return SingleChildScrollView(
-// //       child: Container(
-// //           color: Colors.lightGreen.shade50,
-// //           height: MediaQuery.of(context).size.height,
-// //           width: MediaQuery.of(context).size.width,
-// //           child:  Column(
-// //             children: [
-// //                 Text(firebaseAuth.currentUser!.uid)
-// //             ],
-// //           )
-// //           )
-// //     );
-// //   }
-// // }

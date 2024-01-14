@@ -54,13 +54,13 @@ class AdMobService {
   }
 
   static final BannerAdListener bannerAdListener = BannerAdListener(
-      onAdLoaded: (ad) => debugPrint("BAnner ad loaded"),
+      onAdLoaded: (ad) => debugPrint("Banner ad loaded"),
       onAdFailedToLoad: (ad, error) {
         ad.dispose();
-        debugPrint('ad failed to load kkkjkjkjk : $error');
+        debugPrint('ad failed to load banner : $error');
       },
-      onAdOpened: (ad) => debugPrint('ad opppend'),
-      onAdClosed: (ad) => debugPrint('add closedd'));
+      onAdOpened: (ad) => debugPrint('banner ad opppend'),
+      onAdClosed: (ad) => debugPrint('banner ad closed'));
 }
 
   

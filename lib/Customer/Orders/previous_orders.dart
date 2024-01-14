@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:tailor_flutter/Chat%20Page/chatpage.dart';
 import 'package:tailor_flutter/Common/searchbar.dart';
@@ -18,7 +17,7 @@ class _PreviousOrdersCustomerState extends State<PreviousOrdersCustomer> {
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child:   Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             const MySearchBar(title: "Previous Orders"),
@@ -30,7 +29,7 @@ class _PreviousOrdersCustomerState extends State<PreviousOrdersCustomer> {
               child: ListView.builder(
                   itemCount: 9,
                   itemBuilder: (context, snapshot) {
-                    return   Padding(
+                    return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -41,15 +40,19 @@ class _PreviousOrdersCustomerState extends State<PreviousOrdersCustomer> {
                             child: Text("202$snapshot"),
                           ),
                           GestureDetector(
-                            onTap: (){
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>  const IndividualPage(receiverName: "TailorX",)));
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const IndividualPage(
+                                        receiverName: Text("TailorX"),
+                                      )));
                             },
-                            child:  Card(
+                            child: Card(
                               child: ListTile(
                                 leading: Text("B-280$snapshot"),
                                 title: const Text("Tailor Name"),
-                                subtitle:  const Text("Tailor Shop"),
-                                trailing:  Text("Tailor Id : T-101$snapshot\nTailor Location"),
+                                subtitle: const Text("Tailor Shop"),
+                                trailing: Text(
+                                    "Tailor Id : T-101$snapshot\nTailor Location"),
                               ),
                             ),
                           ),

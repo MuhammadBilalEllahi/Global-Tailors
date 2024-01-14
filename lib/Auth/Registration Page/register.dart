@@ -5,7 +5,7 @@ import 'package:tailor_flutter/FireBase/firebase.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tailor_flutter/Common/my_textfield.dart';
 import 'package:tailor_flutter/Customer/Menu%20Scaffold/sideba_menu.dart';
-import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
 
 class RegisterPage extends StatefulWidget {
   // ignore: non_constant_identifier_names

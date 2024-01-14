@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tailor_flutter/Common/my_elevatedbutton.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
-import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
 
 class MeasurementCustomer extends StatefulWidget {
   const MeasurementCustomer({super.key});
@@ -61,6 +61,7 @@ class _MeasurementCustomerState extends State<MeasurementCustomer> {
 
     super.dispose();
   }
+
   @override
   void initState() {
     getAllMeasurements();
@@ -70,8 +71,6 @@ class _MeasurementCustomerState extends State<MeasurementCustomer> {
 
   @override
   Widget build(BuildContext context) {
-                        
-
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -86,7 +85,6 @@ class _MeasurementCustomerState extends State<MeasurementCustomer> {
                 fontSize: 20,
               ),
             ),
-
             MeasurementCard(
               title: "Neck Size",
               inchEditingController: neckEditingController,
@@ -165,7 +163,7 @@ class _MeasurementCustomerState extends State<MeasurementCustomer> {
             MyElevatedButtom(
               onPressed: () {
                 if (isNotEmpty()) {
-                       Map<String, dynamic> measurements = {
+                  Map<String, dynamic> measurements = {
                     "Neck Size": neckEditingController.text,
                     "Chest": chestEditingController.text,
                     "Waist": waistEditingController.text,
@@ -186,17 +184,12 @@ class _MeasurementCustomerState extends State<MeasurementCustomer> {
                     "Rise": riseEditingController.text,
                   };
 
-                   firestore
-                          .collection("users")
-                          .doc(firebaseAuth.currentUser!.uid)
-                          .collection("measurements")
-                          .doc(firebaseAuth.currentUser!.uid)
-                          .set(
-                        
-                          measurements,
-                      
-                        SetOptions(merge: true)
-                      );
+                  firestore
+                      .collection("users")
+                      .doc(firebaseAuth.currentUser!.uid)
+                      .collection("measurements")
+                      .doc(firebaseAuth.currentUser!.uid)
+                      .set(measurements, SetOptions(merge: true));
                 }
               },
               label: "Save All",
@@ -210,48 +203,48 @@ class _MeasurementCustomerState extends State<MeasurementCustomer> {
         ),
       ),
     );
-    
   }
-void getAllMeasurements() async {
-  try {
-    var snapshot = await firestore
-        .collection('users')
-        .doc(firebaseAuth.currentUser!.uid)
-        .collection("measurements")
-        .doc(firebaseAuth.currentUser!.uid)
-        .get();
 
-    if (mounted) {
-      if (snapshot.exists) {
-        Map<String, dynamic> res = snapshot.data() as Map<String, dynamic>;
+  void getAllMeasurements() async {
+    try {
+      var snapshot = await firestore
+          .collection('users')
+          .doc(firebaseAuth.currentUser!.uid)
+          .collection("measurements")
+          .doc(firebaseAuth.currentUser!.uid)
+          .get();
 
-        neckEditingController.text = res["Neck Size"] ?? "";
-        chestEditingController.text = res["Chest"] ?? "";
-        waistEditingController.text = res["Waist"] ?? "";
-        hipsEditingController.text = res["Hips"];
-        shoulderWidthEditingController.text = res["Shoulder Width"] ?? "";
-        sleeveLengthEditingController.text = res["Sleeve Length"] ?? "";
-        bicepEditingController.text = res["Bicep"] ?? "";
-        wristEditingController.text = res["Wrist"] ?? "";
-        shirtLengthEditingController.text = res["Shirt Length"] ?? "";
-        inseamEditingController.text = res["Inseam"] ?? "";
-        outseamEditingController.text = res["Outseam"] ?? "";
-        thighEditingController.text = res["Thigh"] ?? "";
-        kneeEditingController.text = res["Knee"] ?? "";
-        calfEditingController.text = res["Calf"] ?? "";
-        ankleEditingController.text = res["Ankle"] ?? "";
-        jacketLengthEditingController.text = res["Jacket Length"] ?? "";
-        crotchDepthEditingController.text = res["Crotch Depth"] ?? "";
-        riseEditingController.text = res["Rise"] ?? "";
+      if (mounted) {
+        if (snapshot.exists) {
+          Map<String, dynamic> res = snapshot.data() as Map<String, dynamic>;
 
-        // Notify the framework that the state of the widget has changed
-        setState(() {});
+          neckEditingController.text = res["Neck Size"] ?? "";
+          chestEditingController.text = res["Chest"] ?? "";
+          waistEditingController.text = res["Waist"] ?? "";
+          hipsEditingController.text = res["Hips"];
+          shoulderWidthEditingController.text = res["Shoulder Width"] ?? "";
+          sleeveLengthEditingController.text = res["Sleeve Length"] ?? "";
+          bicepEditingController.text = res["Bicep"] ?? "";
+          wristEditingController.text = res["Wrist"] ?? "";
+          shirtLengthEditingController.text = res["Shirt Length"] ?? "";
+          inseamEditingController.text = res["Inseam"] ?? "";
+          outseamEditingController.text = res["Outseam"] ?? "";
+          thighEditingController.text = res["Thigh"] ?? "";
+          kneeEditingController.text = res["Knee"] ?? "";
+          calfEditingController.text = res["Calf"] ?? "";
+          ankleEditingController.text = res["Ankle"] ?? "";
+          jacketLengthEditingController.text = res["Jacket Length"] ?? "";
+          crotchDepthEditingController.text = res["Crotch Depth"] ?? "";
+          riseEditingController.text = res["Rise"] ?? "";
+
+          // Notify the framework that the state of the widget has changed
+          setState(() {});
+        }
       }
+    } catch (e) {
+      print("Error fetching measurements: $e");
     }
-  } catch (e) {
-    print("Error fetching measurements: $e");
   }
-}
 
 // void getAllMeasurements() async {
 //   try {
@@ -291,8 +284,6 @@ void getAllMeasurements() async {
 //     print("Error fetching measurements: $e");
 //   }
 // }
-
- 
 
   bool isNotEmpty() {
     return neckEditingController.text.isNotEmpty &&
@@ -383,12 +374,9 @@ class MeasurementCard extends StatelessWidget {
                           .doc(firebaseAuth.currentUser!.uid)
                           .collection("measurements")
                           .doc(firebaseAuth.currentUser!.uid)
-                          .set(
-                        {
-                          title: inchEditingController.text.toString(),
-                        },
-                        SetOptions(merge: true)
-                      );
+                          .set({
+                        title: inchEditingController.text.toString(),
+                      }, SetOptions(merge: true));
                     }
                   },
                   icon: const Column(
@@ -406,5 +394,4 @@ class MeasurementCard extends StatelessWidget {
       ),
     );
   }
-  
 }

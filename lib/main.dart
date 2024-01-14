@@ -35,22 +35,23 @@ void main() async {
 
   runApp(ChangeNotifierProvider(
       create: (context) => UserProvider(),
-      child: const MaterialApp(
+      child: MaterialApp(
           // navigatorKey: navigatorKey,
           showPerformanceOverlay: false,
           debugShowCheckedModeBanner: false,
-          // theme: ThemeData.light(
-          //   useMaterial3: true
-          // ),
-          // theme: ThemeData(
-          //   useMaterial3: true
-          // ),
-          // debugShowCheckedModeBanner: false,
-          home: Start())));
+          theme: ThemeData.light(),
+          darkTheme: ThemeData(
+              brightness: Brightness.dark,
+              canvasColor: Colors.black87,
+              primaryColor: Colors.grey.shade700,
+              primaryColorLight: Colors.white,
+              splashColor: Colors.grey.shade700,
+              primaryColorDark: Colors.white38),
+          home: const Start())));
 }
 
 
-
+// Teamviewer 98743hrjdbj
 
 
 

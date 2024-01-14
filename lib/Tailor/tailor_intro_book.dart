@@ -4,7 +4,7 @@ import 'package:tailor_flutter/Common/my_elevatedbutton.dart';
 import 'package:tailor_flutter/Common/my_textfield.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
 import 'package:tailor_flutter/Tailor/tailor_bottm_navigation.dart';
-import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
 
 class TailorBook extends StatefulWidget {
   const TailorBook({super.key});
@@ -82,16 +82,14 @@ class _TailorBookState extends State<TailorBook> {
               label: 'Complete',
               fontSize: 12,
               onPressed: () {
-                if(verifyIfBookIdIsWritten())
-                {
-                 var isOK = addToTailorBook(bookIdEditingController.text);
+                if (verifyIfBookIdIsWritten()) {
+                  var isOK = addToTailorBook(bookIdEditingController.text);
 
-                 //navigator already written in addToTailorBook()
-                
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (context) => const TailorBottomNavigation()));
+                  //navigator already written in addToTailorBook()
+
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (context) => const TailorBottomNavigation()));
                 }
-
               },
             )
           ]),
@@ -99,7 +97,8 @@ class _TailorBookState extends State<TailorBook> {
       ),
     );
   }
-  bool verifyIfBookIdIsWritten(){
+
+  bool verifyIfBookIdIsWritten() {
     return bookIdEditingController.text.isNotEmpty;
   }
 
@@ -120,4 +119,3 @@ class _TailorBookState extends State<TailorBook> {
     });
   }
 }
-

@@ -126,6 +126,34 @@ Future<String?> getBookIDSnap() async {
   }
 }
 
+Future<String?> getPhoneNumberTailorSnap() async {
+  try {
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection("tailor_info")
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      var firstDocument = querySnapshot.docs.first;
+      Map<String, dynamic> data = firstDocument.data();
+      print(firstDocument.reference);
+      print(firstDocument.reference.id);
+      print(data);
+      print(data['tailor_phone_number']);
+
+      return data['tailor_phone_number'];
+    } else {
+      // Handle the case where no documents are found
+      return 'No Phone ID';
+    }
+  } catch (e) {
+    // Handle any errors that occurred during the process
+    print("Error: $e");
+    return null;
+  }
+}
+
 Future<String?> getTailorIDSnap() async {
   try {
     var querySnapshot = await FirebaseFirestore.instance
@@ -152,6 +180,46 @@ Future<String?> getTailorIDSnap() async {
     print("Error: $e");
     return null;
   }
+}
+
+Future<String> getOtherUserNameSnap(otherUser) async {
+  Completer completer = Completer();
+  print("Testing");
+  var querySnapshot =
+      FirebaseFirestore.instance.collection("users").doc(otherUser).get();
+
+  querySnapshot.then((value) {
+    // value.data()
+    // var firstDoc = value..docs.first;
+    Map<String, dynamic> data = value.data()!;
+    print("Other Uer Name is $data");
+    data['email'];
+    completer.complete(data['email']);
+    print("Other Uer Name is ${data['email']}");
+  });
+
+  var data = await completer.future;
+  print("Completer Info $data");
+  return data;
+}
+
+String getOtherUserNameSnapIndividual(otherUser) {
+  String datax = '';
+  print("Testing");
+  var querySnapshot =
+      FirebaseFirestore.instance.collection("users").doc(otherUser).get();
+
+  querySnapshot.then((value) {
+    // value.data()
+    // var firstDoc = value..docs.first;
+    Map<String, dynamic> data = value.data()!;
+    print("Other Uer Name is $data");
+    data['email'];
+    datax = data['email'];
+
+    print("Other Uer Name is ${data['email']}");
+  });
+  return datax;
 }
 
 /*  ?? not using rn

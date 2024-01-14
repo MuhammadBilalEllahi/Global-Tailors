@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:tailor_flutter/Common/my_elevatedbutton.dart';
 import 'package:tailor_flutter/Common/my_textfield.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
-import 'package:tailor_flutter/Tailor/tailor_book.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_book.dart';
 
 final tailorNameEditingController = TextEditingController();
 final shopNameEditingController = TextEditingController();
@@ -94,8 +94,6 @@ class TailorCompleteInfo extends StatelessWidget {
                   label: 'Next',
                   fontSize: 18,
                   onPressed: () {
-
-                    
                     print({
                       "tailor_name": tailorNameEditingController.text,
                       "tailor_shop_name": shopNameEditingController.text,
@@ -103,14 +101,15 @@ class TailorCompleteInfo extends StatelessWidget {
                       "tailor_address": addressEditingController.text,
                       "tailor_phone_number": phoneNumberEditingController.text,
                     });
-                                      
+
                     if (_validateForm()) {
-                      firebaseAuth.currentUser!.updateDisplayName(tailorNameEditingController.text);
+                      firebaseAuth.currentUser!
+                          .updateDisplayName(tailorNameEditingController.text);
                       // firebaseAuth.currentUser!.updatePhoneNumber(phoneNumberEditingController.text);
                       // firebaseAuth.currentUser.linkWithCredential()
                       firestore
-                      .collection('users')
-                      .doc(firebaseAuth.currentUser!.uid)
+                          .collection('users')
+                          .doc(firebaseAuth.currentUser!.uid)
                           .collection('tailor_info')
                           .doc(firebaseAuth.currentUser!.uid)
                           .set({
@@ -123,7 +122,7 @@ class TailorCompleteInfo extends StatelessWidget {
                       }).then((value) {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const TailorBook()));
-                                // OtpPhone(ph: phoneNumberEditingController)));
+                        // OtpPhone(ph: phoneNumberEditingController)));
                       });
                       // .then((value) {
                       //   verifyPhone(phoneNumberEditingController.text);
@@ -142,8 +141,6 @@ class TailorCompleteInfo extends StatelessWidget {
       ),
     );
   }
-
-  
 
   verifyPhone(phoneNumber) async {
     firebaseAuth.verifyPhoneNumber(
@@ -200,7 +197,7 @@ class TextSized extends StatelessWidget {
       textAlign: textAlign,
       style: TextStyle(
         fontSize: fontSize,
-        color: textColor,
+        color: textColor ?? Theme.of(context).primaryColorLight,
       ),
     );
   }

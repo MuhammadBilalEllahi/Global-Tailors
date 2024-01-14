@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:tailor_flutter/Chat%20Page/chatpage.dart';
 import 'package:tailor_flutter/Common/searchbar.dart';
@@ -11,7 +10,7 @@ class ActiveOrders extends StatefulWidget {
 }
 
 class _ActiveOrdersState extends State<ActiveOrders> {
-  bool checkStatus =true;
+  bool checkStatus = true;
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
@@ -26,15 +25,20 @@ class _ActiveOrdersState extends State<ActiveOrders> {
               child: ListView.builder(
                   itemCount: 20,
                   itemBuilder: (context, snapshot) {
-                    return   Padding(
+                    return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>  const IndividualPage(receiverName: "TailorX",)));
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const IndividualPage(
+                                    receiverName: Text("TailorX"),
+                                  )));
                         },
-                        child:  Card(
+                        child: Card(
                           child: ListTile(
-                            leading: !checkStatus ? const Icon(Icons.check) : const Icon(Icons.wifi_protected_setup_sharp),
+                            leading: !checkStatus
+                                ? const Icon(Icons.check)
+                                : const Icon(Icons.wifi_protected_setup_sharp),
                             title: const Text("Tailor Shop"),
                             subtitle: const Text("Cloth with 2 pent coat"),
                             trailing: const Text("Complete Status"),

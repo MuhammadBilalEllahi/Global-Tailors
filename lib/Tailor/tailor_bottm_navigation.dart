@@ -1,14 +1,15 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
 import 'package:tailor_flutter/Tailor/all_chats_tailor.dart';
 import 'package:tailor_flutter/Tailor/tailor_create_post.dart';
-import 'package:tailor_flutter/Tailor/tailor_complete_info.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
 import 'package:tailor_flutter/Tailor/tailor_notifications.dart';
 import 'package:tailor_flutter/Tailor/tailor_post_screen.dart';
 import 'package:tailor_flutter/Tailor/tailor_previous_orders.dart';
 import 'package:tailor_flutter/Common/profile_settings.dart';
+import 'package:tailor_flutter/provider.dart';
 
 class TailorBottomNavigation extends StatefulWidget {
   const TailorBottomNavigation({super.key});
@@ -25,7 +26,7 @@ class _TailorBottomNavigationState extends State<TailorBottomNavigation> {
     const PreviousOrders(),
     const TailorHome(),
     Container(),
-    const ChatListPage(),
+    const TailorChatListPage(),
     const ProfileSettings(),
     // const Settings(),
   ];
@@ -51,26 +52,27 @@ class _TailorBottomNavigationState extends State<TailorBottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 179, 236, 236),
+      backgroundColor: Theme.of(context).primaryColor,
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: Theme.of(context).canvasColor,
         title: TextButton(
             onPressed: () {},
-            child:
-             FutureBuilder<String?>(
+            child: FutureBuilder<String?>(
               future: getTailorIDSnap(),
               builder: (content, snapshot) {
-                print("Tailor ID (lib/Tailor/tailor_bottm_navigation.dart) : > ${snapshot.data}");
+                print(
+                    "Tailor ID (lib/Tailor/tailor_bottm_navigation.dart) :  ${snapshot.data}");
+                Provider.of<UserProvider>(context, listen: false)
+                    .tailorID("T-${snapshot.data.toString()}");
                 return TextSized(
-                  text: "T-${snapshot.data.toString()}" ,
+                  text: "T-${snapshot.data.toString()}",
                   fontSize: 20,
                   textAlign: TextAlign.left,
-                  textColor: Colors.black,
+                  textColor: Theme.of(context).primaryColorLight,
                 );
               },
-            )
-            ),
+            )),
         // leadingWidth: 0,
         centerTitle: true,
 
@@ -78,7 +80,8 @@ class _TailorBottomNavigationState extends State<TailorBottomNavigation> {
           TextButton(
               onPressed: () {
                 // getTailorIDSnap();
-                getTailorInArea("India");
+                // getTailorInArea("India");
+                // getOtherUserNameSnap();
               },
               child: const Text("T")),
           IconButton(
@@ -91,7 +94,7 @@ class _TailorBottomNavigationState extends State<TailorBottomNavigation> {
               icon: const Icon(Icons.logout))
         ],
       ),
-      endDrawer:  const Drawer(
+      endDrawer: const Drawer(
         child: Padding(
           padding: EdgeInsets.only(top: 90),
           child: Column(
@@ -130,36 +133,42 @@ class _TailorBottomNavigationState extends State<TailorBottomNavigation> {
               icon: Icon(Icons.control_point_duplicate_sharp),
             ),
             BottomNavigationBarItem(label: '', icon: Icon(Icons.chat)),
-            BottomNavigationBarItem(
-                label: '', icon: Icon(Icons.short_text_rounded)),
+            BottomNavigationBarItem(label: '', icon: Icon(Icons.person)),
           ]),
     );
   }
-}
 
-void _showCreatePostBottomSheet(BuildContext context) {
-  showModalBottomSheet(
-    useRootNavigator: true,
-    context: context,
-    backgroundColor: Colors.transparent,
-    isScrollControlled: true,
-    builder: (BuildContext context) {
-      return DraggableScrollableSheet(
-        initialChildSize: 0.4,
-        maxChildSize: 0.5,
-        minChildSize: 0.2,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return Container(
-            // height: MediaQuery.of(context).size.height -40,
-            // width: MediaQuery.of(context).size.width,
-            color: Colors.white,
-            child: const SingleChildScrollView(
-              // controller: scrollController,
-              child: CreatePost(),
-            ),
-          );
-        },
-      );
-    },
-  );
+  void _showCreatePostBottomSheet(BuildContext context) {
+    // double height = 0.5;
+    showModalBottomSheet(
+      useRootNavigator: true,
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.5,
+          maxChildSize: 0.8,
+          minChildSize: 0.2,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return Container(
+              // height: MediaQuery.of(context).size.height -40,
+              // width: MediaQuery.of(context).size.width,
+              color: Theme.of(context).splashColor,
+              child: SingleChildScrollView(
+                // controller: scrollController,
+                child: CreatePost(
+                  onTap: () {
+                    // setState(() {
+                    //   height = 2000;
+                    // });
+                  },
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 }

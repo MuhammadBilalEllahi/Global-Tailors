@@ -13,6 +13,10 @@ class myTextField extends StatelessWidget {
     this.readOnly = false,
     this.inputFormatters,
     this.inputBorder,
+    this.height,
+    this.width,
+    this.padZero,
+    this.keybordType,
   }) : _textEditingController = textEditingController;
 
   final TextEditingController _textEditingController;
@@ -23,36 +27,44 @@ class myTextField extends StatelessWidget {
   final bool readOnly;
   final List<TextInputFormatter>? inputFormatters;
   final InputBorder? inputBorder;
+  final double? height;
+  final double? width;
+  final double? padZero;
+  final TextInputType? keybordType;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 90,
-      width: 400,
+      height: height ?? 90,
+      width: width ?? 400,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(25, 10, 25, 20),
+        padding: EdgeInsets.fromLTRB(
+            padZero ?? 25, padZero ?? 10, padZero ?? 25, padZero ?? 20),
         child: TextFormField(
-          style: MaterialStateTextStyle.resolveWith((states) => const TextStyle(
-              color: Colors.black, decorationColor: Colors.amber)),
+          style: TextStyle(color: Theme.of(context).primaryColorLight),
           controller: _textEditingController,
           autofocus: focus,
           validator: validator,
           readOnly: readOnly,
+          keyboardType: keybordType,
 
           // style: GoogleFonts.abel(),
+
           obscureText: obscureTextBool,
           // textInputAction: textInputType,
           inputFormatters: inputFormatters,
           decoration: InputDecoration(
-            fillColor: Colors.green,
+            fillColor: Theme.of(context).primaryColorLight,
             // error: ,
+
             errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 10),
             // iconColor: Colors.blue,
 
             border: inputBorder ?? const UnderlineInputBorder(),
             label: Text(
               label,
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(
+                  fontSize: 16, color: Theme.of(context).primaryColorLight),
             ),
 
             //  focusColor: Colors.amber
@@ -62,9 +74,10 @@ class myTextField extends StatelessWidget {
     );
   }
 }
+
 class MyPhoneTextField extends StatefulWidget {
   const MyPhoneTextField({
-    Key? key,
+    super.key,
     required TextEditingController textEditingController,
     required this.label,
     required this.focus,
@@ -72,7 +85,7 @@ class MyPhoneTextField extends StatefulWidget {
     this.readOnly = false,
     this.inputFormatters,
     this.inputBorder,
-  }) : _textEditingController = textEditingController, super(key: key);
+  }) : _textEditingController = textEditingController;
 
   final TextEditingController _textEditingController;
   final String label;
@@ -87,11 +100,10 @@ class MyPhoneTextField extends StatefulWidget {
 }
 
 class _MyPhoneTextFieldState extends State<MyPhoneTextField> {
-   String phoneCode='+93';
+  String phoneCode = '+93';
 
   @override
   Widget build(BuildContext context) {
-    
     return SizedBox(
       height: 100,
       width: 400,
@@ -104,18 +116,18 @@ class _MyPhoneTextFieldState extends State<MyPhoneTextField> {
               var number = PhoneNumber().phoneNumber;
               print("$number");
               // The input is considered valid, update the textEditingController
-              widget._textEditingController.text = "$phoneCode${widget._textEditingController.text}";
+              widget._textEditingController.text =
+                  "$phoneCode${widget._textEditingController.text}";
               print(widget._textEditingController.text);
               print(value);
             }
           },
           onInputChanged: (PhoneNumber number) {
-            phoneCode= number.dialCode!;
+            phoneCode = number.dialCode!;
             print(phoneCode);
             // Access the entered phone number
             String phoneNumber = number.phoneNumber ?? "";
             print("$phoneNumber and ${widget._textEditingController.text}");
-
 
             // Handle phone number changes if needed
           },
