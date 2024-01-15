@@ -7,6 +7,7 @@ import 'package:tailor_flutter/Common/my_textfield.dart';
 import 'package:tailor_flutter/Customer/Menu%20Scaffold/sideba_menu.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
 import 'package:tailor_flutter/Tailor/tailor_bottm_navigation.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
 import 'package:tailor_flutter/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    print(" check if logged in ${firebaseAuth.currentUser!.uid}");
+    // print(" check if logged in ${firebaseAuth.currentUser!.uid}");
     _textEditingController.text = 'newuser@gmail.com';
     _passwordEditingController.text = '12345678';
     super.initState();
@@ -60,9 +61,9 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Hi ${widget.type}\n ${firebaseAuth.currentUser!.uid}",
-                  style: const TextStyle(fontSize: 32, color: Colors.black),
+                TextSized(
+                  text: "Hi ${widget.type}",
+                  fontSize: 32,
                 ),
                 myTextField(
                   textEditingController: _textEditingController,
@@ -147,6 +148,9 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text("No Account? "),
+                      const SizedBox(
+                        width: 5,
+                      ),
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -156,12 +160,13 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           );
                         },
-                        child: const Text(
-                          "Sign Up Now",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: const TextSized(
+                          text: "Sign Up Now",
+                          fontSize: 13,
+                          // style: TextStyle(
+                          //   color: Colors.black,
+                          //   fontWeight: FontWeight.bold,
+                          // ),
                         ),
                       ),
                     ],

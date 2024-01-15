@@ -39,14 +39,28 @@ void main() async {
           // navigatorKey: navigatorKey,
           showPerformanceOverlay: false,
           debugShowCheckedModeBanner: false,
-          theme: ThemeData.light(),
+          theme: ThemeData(
+              brightness: Brightness.light,
+              canvasColor: Colors.black87,
+              primaryColor: Colors.grey.shade700,
+              primaryColorLight: Colors.white,
+              splashColor: Colors.grey.shade700,
+              primaryColorDark: Colors.white38,
+              iconTheme: const IconThemeData(color: Colors.white),
+              iconButtonTheme: const IconButtonThemeData(
+                  style: ButtonStyle(
+                      iconColor: MaterialStatePropertyAll(Colors.white)))),
           darkTheme: ThemeData(
               brightness: Brightness.dark,
               canvasColor: Colors.black87,
               primaryColor: Colors.grey.shade700,
               primaryColorLight: Colors.white,
               splashColor: Colors.grey.shade700,
-              primaryColorDark: Colors.white38),
+              primaryColorDark: Colors.white38,
+              iconTheme: const IconThemeData(color: Colors.white),
+              iconButtonTheme: const IconButtonThemeData(
+                  style: ButtonStyle(
+                      iconColor: MaterialStatePropertyAll(Colors.white)))),
           home: const Start())));
 }
 

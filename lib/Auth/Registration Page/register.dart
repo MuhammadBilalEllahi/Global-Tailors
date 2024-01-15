@@ -69,18 +69,19 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 340,
                 width: 350,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: const Color.fromARGB(255, 224, 224, 224),
-                ),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).splashColor
+                    // color: const Color.fromARGB(255, 224, 224, 224),
+                    ),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(top: 20),
-                        child: Text(
-                          "Sign Up ",
-                          style: TextStyle(color: Colors.black, fontSize: 32),
+                        child: TextSized(
+                          text: "Sign Up ",
+                          fontSize: 32,
                         ),
                       ),
                       //                 SizedBox(
@@ -231,6 +232,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text("Already Have An Account? "),
+                    const SizedBox(
+                      width: 5,
+                    ),
                     TextButton(
                         onPressed: () {
                           // widget.showLoginPage();
@@ -241,9 +245,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   builder: (context) =>
                                       LoginPage(type: widget.type)));
                         },
-                        child: const Text("Login Now",
-                            style:
-                                TextStyle(color: Color.fromARGB(255, 0, 0, 0))))
+                        child: const TextSized(
+                          text: "Login Now",
+                          fontSize: 15,
+                        ))
                   ],
                 ),
               )

@@ -168,9 +168,9 @@ class TailorCompleteInfo extends StatelessWidget {
           return const AlertDialog(
             shape: BeveledRectangleBorder(),
             backgroundColor: Colors.black,
-            content: Text(
-              "Fields can not be empty",
-              style: TextStyle(fontSize: 15, color: Colors.white),
+            content: TextSized(
+              text: "Fields can not be empty",
+              fontSize: 15,
             ),
           );
         });

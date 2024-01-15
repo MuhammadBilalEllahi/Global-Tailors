@@ -185,6 +185,19 @@ class TailorChatListPage extends StatelessWidget {
   }
 }
 
+Future<void> navigateToIndividualPage(context, String otherUser) async {
+  String? userName = await getOtherUserNameSnap(otherUser);
+
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => IndividualPage(
+        receiverName: userName ?? "",
+        receiverID: otherUser,
+      ),
+    ),
+  );
+}
+
 Widget _buildUserListItem(DocumentSnapshot documentSnapshot, context) {
   String chatRoomId = documentSnapshot.id;
   print("FS $chatRoomId");
@@ -210,19 +223,25 @@ Widget _buildUserListItem(DocumentSnapshot documentSnapshot, context) {
       children: [
         ListTile(
           onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => IndividualPage(
-                        receiverName: FutureBuilder<String>(
-                          future: getOtherUserNameSnap(otherUser),
-                          builder: ((context, snapshot) {
-                            print("Snapshot Name ${snapshot.data}");
-                            return Text("${snapshot.data}");
-                          }),
-                        ),
-                        receiverID: otherUser)));
-          },
+            navigateToIndividualPage(context, otherUser);
+          }
+
+          // Navigator.push(
+          //     context,
+
+          // MaterialPageRoute(
+          //     builder: (context) => IndividualPage(
+          //         receiverName:
+          //          FutureBuilder<String>(
+          //           future: getOtherUserNameSnap(otherUser),
+          //           builder: ((context, snapshot) {
+          //             print("Snapshot Name ${snapshot.data}");
+          //             return Text("${snapshot.data}");
+          //           }),
+          //         ),
+          //         receiverID: otherUser))
+
+          ,
           leading: CircleAvatar(
             child: Container(
               decoration: const BoxDecoration(
@@ -317,9 +336,14 @@ String timeConvert(timestamp) {
 
   print("Time pC----------:$postConverted");
   print("Time pC----------:${postConverted.toDate()}");
+  int hour = postConverted.toDate().hour;
+  String amPm = hour >= 12 ? 'pm' : 'am';
+  hour = hour % 12;
+  hour = hour == 0 ? 12 : hour;
+  String formattedHour = hour.toString().padLeft(2, '0');
 
   String formatedDate =
-      "${postConverted.toDate().hour} ${postConverted.toDate().minute} ${postConverted.toDate().hour > 12 ? "pm" : "am"}";
+      "$formattedHour:${postConverted.toDate().minute} ${postConverted.toDate().hour > 12 ? "pm" : "am"}";
   //  formatedDate = postConverted.toDate().toString().splitMapJoin(pattern);
   return formatedDate;
 }

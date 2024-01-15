@@ -43,7 +43,7 @@ class _PreviousOrdersCustomerState extends State<PreviousOrdersCustomer> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const IndividualPage(
-                                        receiverName: Text("TailorX"),
+                                        receiverName: "TailorX",
                                       )));
                             },
                             child: Card(

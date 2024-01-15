@@ -65,9 +65,8 @@ class _TailorListFromCustomerState extends State<TailorListFromCustomer> {
               },
             ),
             Expanded(
-              child: isLoading
-                  ? _buildLoadingShimmer()
-                  : _buildTailorListView(),
+              child:
+                  isLoading ? _buildLoadingShimmer() : _buildTailorListView(),
             ),
           ],
         ),
@@ -113,8 +112,8 @@ class _TailorListFromCustomerState extends State<TailorListFromCustomer> {
 
   Widget _buildLoadingShimmer() {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: Theme.of(context).canvasColor,
+      highlightColor: Theme.of(context).splashColor,
       child: ListView.builder(
         itemCount: 5, // You can adjust the number of shimmer items
         itemBuilder: (context, index) {

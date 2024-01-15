@@ -28,9 +28,8 @@ class _TailorBottomNavigationState extends State<TailorBottomNavigation> {
     Container(),
     const TailorChatListPage(),
     const ProfileSettings(),
-    // const Settings(),
   ];
-  String tailorId = ""; // Variable to hold the tailor ID
+  String tailorId = "";
 
   @override
   void initState() {
@@ -77,13 +76,13 @@ class _TailorBottomNavigationState extends State<TailorBottomNavigation> {
         centerTitle: true,
 
         actions: [
-          TextButton(
-              onPressed: () {
-                // getTailorIDSnap();
-                // getTailorInArea("India");
-                // getOtherUserNameSnap();
-              },
-              child: const Text("T")),
+          // TextButton(
+          //     onPressed: () {
+          //       // getTailorIDSnap();
+          //       // getTailorInArea("India");
+          //       // getOtherUserNameSnap();
+          //     },
+          //     child: const Text("T")),
           IconButton(
               onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
               icon: const Icon(Icons.notifications)),
@@ -114,26 +113,37 @@ class _TailorBottomNavigationState extends State<TailorBottomNavigation> {
       drawer: const Drawer(),
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+          elevation: 2,
+          selectedIconTheme: const IconThemeData(weight: 40, size: 28),
+          unselectedIconTheme: const IconThemeData(weight: 1, size: 22),
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.grey.shade300,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.black87,
+          backgroundColor: Theme.of(context).canvasColor,
+          selectedItemColor: Theme.of(context).primaryColorDark,
+          unselectedItemColor: Theme.of(context).primaryColorLight,
           onTap: _onItemTapped,
           items: const [
             BottomNavigationBarItem(
                 label: '',
                 icon: Icon(
-                  Icons.local_activity_outlined,
+                  // color: Theme.of(context).iconTheme.color,
+                  Icons.access_time_outlined,
                 )),
-            BottomNavigationBarItem(
-                label: '', icon: Icon(Icons.access_time_sharp)),
+            BottomNavigationBarItem(label: '', icon: Icon(
+                // color: Theme.of(context).iconTheme.color,
+                Icons.home_filled)),
             BottomNavigationBarItem(
               label: '',
-              icon: Icon(Icons.control_point_duplicate_sharp),
+              icon: Icon(
+                  // color: Theme.of(context).iconTheme.color,
+                  Icons.add_circle_outline),
             ),
-            BottomNavigationBarItem(label: '', icon: Icon(Icons.chat)),
-            BottomNavigationBarItem(label: '', icon: Icon(Icons.person)),
+            BottomNavigationBarItem(label: '', icon: Icon(
+                // color: Theme.of(context).iconTheme.color,
+                Icons.chat)),
+            BottomNavigationBarItem(label: '', icon: Icon(
+                // color: Theme.of(context).iconTheme.color,
+                Icons.person)),
           ]),
     );
   }

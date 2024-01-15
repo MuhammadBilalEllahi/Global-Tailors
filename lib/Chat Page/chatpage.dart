@@ -17,7 +17,7 @@ class IndividualPage extends StatefulWidget {
       this.tId,
       this.shopName,
       this.location});
-  final Widget receiverName;
+  final String receiverName;
 
   final String? receiverID;
   final String? tId;
@@ -87,11 +87,14 @@ class _IndividualPageState extends State<IndividualPage> {
             bottom: isCustomer
                 ? PreferredSize(
                     preferredSize: Size(MediaQuery.of(context).size.width, 100),
-                    child: Card(
-                      child: ListTile(
-                        title: Text(widget.shopName!),
-                        subtitle: Text(widget.location!),
-                        trailing: Text(widget.tId!),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        child: ListTile(
+                          title: Text(widget.shopName!),
+                          subtitle: Text(widget.location!),
+                          trailing: Text(widget.tId!),
+                        ),
                       ),
                     ),
                   )
@@ -101,7 +104,7 @@ class _IndividualPageState extends State<IndividualPage> {
                   ),
             leadingWidth: 70,
             titleSpacing: 0,
-            backgroundColor: const Color.fromARGB(255, 148, 148, 148),
+            backgroundColor: Theme.of(context).canvasColor.withAlpha(215),
             leading: InkWell(
                 onTap: () {
                   Navigator.of(context).pop();
@@ -139,7 +142,7 @@ class _IndividualPageState extends State<IndividualPage> {
   }
 
   SizedBox ChatBody(BuildContext context) {
-    final height = MediaQuery.of(context).size.height / 1.2;
+    final height = MediaQuery.of(context).size.height / 1.15;
     print("Height >>>>>>>>>>>>> $height");
     print(
         "Height >>>>>>>>>>>>> ${height + height - MediaQuery.of(context).size.height}");
@@ -391,12 +394,12 @@ class _IndividualPageState extends State<IndividualPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // Text(
-            //   widget.receiverName,
-            //   style:
-            //       const TextStyle(fontSize: 18.5, fontWeight: FontWeight.bold),
-            // ),
-            widget.receiverName,
+            Text(
+              widget.receiverName,
+              style:
+                  const TextStyle(fontSize: 18.5, fontWeight: FontWeight.bold),
+            ),
+            // widget.receiverName,
             const Text(
               "Last seen today at 2:30",
               style: TextStyle(

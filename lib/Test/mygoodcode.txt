@@ -1,0 +1,356 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:tailor_flutter/FireBase/firebase.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
+
+class TailorHome extends StatefulWidget {
+  const TailorHome({super.key});
+
+  @override
+  State<TailorHome> createState() => _TailorHomeState();
+}
+
+class _TailorHomeState extends State<TailorHome> {
+  bool isLiked = false;
+  final commentEditingController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+          color: Theme.of(context).canvasColor,
+          child: FutureBuilder(
+            future: firestore.collection('tailor_posts').get(),
+
+            // .collection('posts')
+            // .doc()
+            // .get(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Text("No Data");
+              }
+              if (snapshot.hasError) {
+                return Text("Error : ${snapshot.error}");
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator.adaptive();
+              }
+              if (snapshot.hasData) {
+
+
+                QuerySnapshot<Map<String, dynamic>>? querySnapshot =
+                    snapshot.data;
+            
+                // querySnapshot.docChanges
+
+                // print("Query 0 ${querySnapshot?.docChanges[0].doc.id}");
+                // print("Query 1 ${querySnapshot?.docChanges[1].doc.id}");
+
+                querySnapshot?.docChanges.forEach((element) async {
+                  // print("Query 2 ${element.doc.id}");
+
+                  var snap = firestore
+                      .collection('tailor_posts')
+                      .doc(element.doc.id)
+                      .collection("posts")
+                      .get();
+                  snap.then((value) {
+                    for (var element in value.docChanges) {
+                      // print("Query 4 ${element.doc.id}");
+                      // print("Query 4 ${element.doc.data()}");
+
+                      print(
+                          "I have to return these values  to create post ${element.doc.data()!['T-ID']}  ");
+                      print("Title ${element.doc.data()!['title']}");
+                      print("Content ${element.doc.data()!['content']}");
+                      print("Img ${element.doc.data()!['img']}");
+                    }
+                  });
+                });
+
+/**?  works good 
+                // print("Has Data ${snapshot.data}");
+                // print("Snap data ${snapshot.data?.docs}");
+                // print("lets chek : ${snapshot.data!.docs.firstOrNull}");
+                // print(
+                //     "lets chek : ${snapshot.data?.docChanges.firstOrNull?.doc.data()}");
+                // print(
+                //     "lets chek uid : ${snapshot.data?.docChanges.firstOrNull?.doc.data()!['uid_posts']}");
+
+*/
+                // print("lets chek : ${snapshot.data![0]}"); //not work
+                // var data = snapshot.data?.data();
+                // print("Data Map : ${data!['uid']}");
+
+                // print(
+                //     "lets chek : ${snapshot.data?.docChanges.firstOrNull?.doc.data()?.entries.first.value}");
+
+                return Text("${snapshot.data}");
+              }
+              return const Text("data");
+            },
+          )),
+    );
+  }
+
+  Padding Post(BuildContext context) {
+    bool hasImage = false;
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        color: Theme.of(context).canvasColor.withAlpha(150),
+        // height: 500,
+        height: MediaQuery.of(context).size.height / 1.9,
+        width: MediaQuery.of(context).size.width - 40,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ListTile(
+              leading: const Text(""),
+              trailing: CircleAvatar(
+                // backgroundImage: ,
+                // radius: 20,
+
+                child: hasImage
+                    // ignore: dead_code
+                    ? Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover, image: NetworkImage("")), //img to be here from fututre builder
+                        ),
+                      )
+                    : Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage("assets/person.svg")),
+                        ),
+                      ),
+              ),
+            ),
+            const NewsFeeedPost(),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                      },
+                      icon: isLiked
+                          ? const Icon(Icons.thumb_up_alt_rounded)
+                          : const Icon(Icons.thumb_up_alt_outlined)),
+                ),
+                SizedBox(
+                  // color: Colors.grey.shade800,
+                  width: MediaQuery.of(context).size.width - 170,
+                  height: 40,
+                  child: TextField(
+                      autofocus: false,
+                      controller: commentEditingController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          // borderSide: BorderSide(strokeAlign: 2, style: BorderStyle.solid, color: Colors.white70)
+                        ),
+                        // label: Text("Comment")
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 0, right: 10),
+                  child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                      },
+                      icon: isLiked
+                          ? const Icon(Icons.abc_outlined)
+                          : const Icon(Icons.share)),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NewsFeeedPost extends StatelessWidget {
+  const NewsFeeedPost({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        color: Colors.white,
+        height: MediaQuery.of(context).size.height / 3,
+        width: MediaQuery.of(context).size.width - 40,
+        child: Image.network(
+          'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg',
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
+  }
+}
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:tailor_flutter/FireBase/firebase.dart';
+// import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
+
+// class TailorHome extends StatefulWidget {
+//   const TailorHome({super.key});
+
+//   @override
+//   State<TailorHome> createState() => _TailorHomeState();
+// }
+
+// class _TailorHomeState extends State<TailorHome> {
+//   bool isLiked = false;
+//   final commentEditingController = TextEditingController();
+//   @override
+//   Widget build(BuildContext context) {
+//     return SingleChildScrollView(
+//       child: Column(
+//         children: [
+//           const Padding(
+//             padding: EdgeInsets.all(8.0),
+//             child: SearchBar(),
+//           ),
+//           const SizedBox(
+//             height: 20,
+//           ),
+//           Post(context),
+//           Post(context),
+//           Post(context),
+//           Post(context),
+//           Post(context),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Padding Post(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(10.0),
+//       child: Container(
+//         color: Theme.of(context).canvasColor.withAlpha(150),
+//         // height: 500,
+//         height: MediaQuery.of(context).size.height / 1.9,
+//         width: MediaQuery.of(context).size.width - 40,
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             ListTile(
+//               leading: FutureBuilder<String?>(
+//                 future: getTailorIDSnap(),
+//                 builder: (content, snapshot) {
+//                   //other people tid
+//                   print(
+//                       "Tailor ID (lib/Tailor/tailor_bottm_navigation.dart) :  ${snapshot.data}");
+//                   return TextSized(
+//                     text: "T-${snapshot.data.toString()}",
+//                     fontSize: 20,
+//                     textAlign: TextAlign.left,
+//                     textColor: Theme.of(context).primaryColorLight,
+//                   );
+//                 },
+//               ),
+//               trailing: CircleAvatar(
+//                 // backgroundImage: ,
+//                 // radius: 20,
+//                 child: Container(
+//                   decoration: const BoxDecoration(
+//                     shape: BoxShape.circle,
+//                     image: DecorationImage(
+//                       fit: BoxFit.cover, // Adjust this based on your needs
+//                       image: NetworkImage(
+//                           'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg'),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             const NewsFeeedPost(),
+//             Row(
+//               children: [
+//                 Padding(
+//                   padding: const EdgeInsets.only(left: 10, right: 10),
+//                   child: IconButton(
+//                       onPressed: () {
+//                         setState(() {
+//                           isLiked = !isLiked;
+//                         });
+//                       },
+//                       icon: isLiked
+//                           ? const Icon(Icons.thumb_up_alt_rounded)
+//                           : const Icon(Icons.thumb_up_alt_outlined)),
+//                 ),
+//                 SizedBox(
+//                   // color: Colors.grey.shade800,
+//                   width: MediaQuery.of(context).size.width - 170,
+//                   height: 40,
+//                   child: TextField(
+//                       autofocus: false,
+//                       controller: commentEditingController,
+//                       decoration: const InputDecoration(
+//                         border: OutlineInputBorder(
+//                           borderRadius: BorderRadius.all(Radius.circular(20)),
+//                           // borderSide: BorderSide(strokeAlign: 2, style: BorderStyle.solid, color: Colors.white70)
+//                         ),
+//                         // label: Text("Comment")
+//                       )),
+//                 ),
+//                 Padding(
+//                   padding: const EdgeInsets.only(left: 0, right: 10),
+//                   child: IconButton(
+//                       onPressed: () {
+//                         setState(() {
+//                           isLiked = !isLiked;
+//                         });
+//                       },
+//                       icon: isLiked
+//                           ? const Icon(Icons.abc_outlined)
+//                           : const Icon(Icons.share)),
+//                 ),
+//               ],
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class NewsFeeedPost extends StatelessWidget {
+//   const NewsFeeedPost({
+//     super.key,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(10.0),
+//       child: Container(
+//         color: Colors.white,
+//         height: MediaQuery.of(context).size.height / 3,
+//         width: MediaQuery.of(context).size.width - 40,
+//         child: Image.network(
+//           'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg',
+//           fit: BoxFit.fill,
+//         ),
+//       ),
+//     );
+//   }
+// }

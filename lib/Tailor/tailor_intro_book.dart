@@ -26,24 +26,24 @@ class _TailorBookState extends State<TailorBook> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: AppBar(
-        // automaticallyImplyLeading: false,
-        backgroundColor: Colors.grey.shade300,
-        leading: TextButton(
-            onPressed: () {},
-            child: const TextSized(
-              text: "T-  ",
-              fontSize: 20,
-              textAlign: TextAlign.left,
-              textColor: Colors.black,
-            )),
-        leadingWidth: 100,
-        actions: [
-          IconButton(
-              onPressed: () => scaffoldKey.currentState?.openDrawer(),
-              icon: const Icon(Icons.notifications))
-        ],
-      ),
+      // appBar: AppBar(
+      //   // automaticallyImplyLeading: false,
+      //   backgroundColor: Colors.grey.shade300,
+      //   leading: TextButton(
+      //       onPressed: () {},
+      //       child: const TextSized(
+      //         text: "T-  ",
+      //         fontSize: 20,
+      //         textAlign: TextAlign.left,
+      //         textColor: Colors.black,
+      //       )),
+      //   leadingWidth: 100,
+      //   actions: [
+      //     IconButton(
+      //         onPressed: () => scaffoldKey.currentState?.openDrawer(),
+      //         icon: const Icon(Icons.notifications))
+      //   ],
+      // ),
       // endDrawer: const Drawer(      ),
       body: SingleChildScrollView(
         child: SizedBox(
@@ -58,8 +58,12 @@ class _TailorBookState extends State<TailorBook> {
             Container(
                 height: 200,
                 width: 300,
-                decoration: BoxDecoration(color: Colors.grey.shade300),
-                child: const Center(child: Text("video here"))),
+                decoration: BoxDecoration(color: Theme.of(context).canvasColor),
+                child: const Center(
+                    child: TextSized(
+                  text: "video here",
+                  fontSize: 19,
+                ))),
             const SizedBox(
               height: 20,
             ),
@@ -70,10 +74,22 @@ class _TailorBookState extends State<TailorBook> {
                 label: 'B-XXXX',
                 obscureTextBool: false,
                 focus: true,
+                keybordType: TextInputType.number,
                 validator: (value) {
                   if (value == null) {
                     print("Enter Book ID ");
+                    myShowDialog(context, "Enter Book ID");
                     //set custom value
+                  }
+                  if (value.toString().contains(",") ||
+                      value.toString().contains("-") ||
+                      value.toString().contains(".")) {
+                    print("Enter Numbers Only ");
+                    myShowDialog(context, "Enter Numbers Only");
+                    //set custom value
+                  }
+                  if (value.toString().contains(" ")) {
+                    value = value.toString().replaceAll(" ", "");
                   }
 
                   return null;
@@ -96,6 +112,16 @@ class _TailorBookState extends State<TailorBook> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> myShowDialog(BuildContext context, title) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: title,
+          );
+        });
   }
 
   bool verifyIfBookIdIsWritten() {

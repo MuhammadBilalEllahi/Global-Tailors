@@ -1,26 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
 
 class OwnMessageCard extends StatelessWidget {
-  const OwnMessageCard({super.key, required this.text, required this.name, required this.timestamp});
+  const OwnMessageCard(
+      {super.key,
+      required this.text,
+      required this.name,
+      required this.timestamp});
 
   final String text;
   final String name;
- final Timestamp timestamp;
+  final Timestamp timestamp;
 
   @override
   Widget build(BuildContext context) {
-print("---------------${timestamp.toDate().hour}:${timestamp.toDate().minute}");
+    print(
+        "---------------${timestamp.toDate().hour}:${timestamp.toDate().minute}");
     return Align(
       alignment: Alignment.centerRight,
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width - 45,
         ),
-        child:  GestureDetector(
-          onLongPress:(){
-             _copyToClipboard(context,text);
+        child: GestureDetector(
+          onLongPress: () {
+            _copyToClipboard(context, text);
           },
           child: Card(
             elevation: 6,
@@ -28,8 +34,8 @@ print("---------------${timestamp.toDate().hour}:${timestamp.toDate().minute}");
               borderRadius: BorderRadius.circular(8),
             ),
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-            color:  Colors.orangeAccent.shade100.withOpacity(.6),
-            child:  Column(
+            color: Theme.of(context).splashColor,
+            child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -38,28 +44,28 @@ print("---------------${timestamp.toDate().hour}:${timestamp.toDate().minute}");
                 Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 10,right: 60, top :5, bottom: 20),
-                      child: Text(text,
-                      style: const TextStyle(
-                        fontSize: 15
-                      ),),
+                      padding: const EdgeInsets.only(
+                          left: 10, right: 60, top: 5, bottom: 20),
+                      child: Text(
+                        text,
+                        style: const TextStyle(fontSize: 15),
+                      ),
                     ),
-                     Positioned(
+                    Positioned(
                       bottom: 4,
-                      right: 10, 
+                      right: 10,
                       child: Row(
                         children: [
-                          Text("${timestamp.toDate().hour}:${timestamp.toDate().minute}", 
-                        style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
-                           ),
-                                ),
-                      const SizedBox(width: 5,),
-                
-                      const Icon(Icons.done_all, size: 20 )
-                      
-                      ],
+                          TextSized(
+                            text:
+                                "${timestamp.toDate().hour}:${timestamp.toDate().minute}",
+                            fontSize: 13,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Icon(Icons.done_all, size: 20)
+                        ],
                       ),
                     )
                   ],
@@ -70,8 +76,8 @@ print("---------------${timestamp.toDate().hour}:${timestamp.toDate().minute}");
         ),
       ),
     );
-    
   }
+
   void _copyToClipboard(BuildContext context, String text) {
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(context).showSnackBar(

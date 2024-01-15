@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:tailor_flutter/Auth/LoginPage/login.dart';
 import 'package:tailor_flutter/Choice/lets_get_started_page.dart';
 
 final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -93,7 +94,7 @@ Future<void> signout(context) async {
   firebaseAuth.signOut().then((value) {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const AuthPage()),
+        MaterialPageRoute(builder: (context) => const LoginPage(type: "User")),
         (route) => false);
   });
 }

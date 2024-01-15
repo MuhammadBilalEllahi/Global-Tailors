@@ -35,6 +35,7 @@ class _SignInUpAsState extends State<SignInUpAs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Theme.of(context).splashColor,
       body: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: SizedBox(
@@ -54,9 +55,10 @@ class _SignInUpAsState extends State<SignInUpAs> {
                       fontSize: MediaQuery.of(context).size.width / 8)),
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: const Color.fromARGB(255, 224, 224, 224),
-                ),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).splashColor
+                    // color: const Color.fromARGB(255, 224, 224, 224),
+                    ),
                 width: 300,
                 height: 220,
                 // color: Colors.grey.shade400,
@@ -78,28 +80,25 @@ class _SignInUpAsState extends State<SignInUpAs> {
                           fixedSize: MaterialStatePropertyAll(Size(150, 30)),
                           backgroundColor:
                               MaterialStatePropertyAll(Colors.black)),
-                      child: const Text("As Customer",
-                          style: TextStyle(color: Colors.white, fontSize: 15)),
+                      child: const TextSized(text: "As Customer", fontSize: 15),
                     ),
                     const SizedBox(
                       height: 5,
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                const RegisterPage(type: "Tailor")));
-                      },
-                      style: const ButtonStyle(
-                          fixedSize: MaterialStatePropertyAll(Size(150, 30)),
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.black)),
-                      child: const Text("As Tailor",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                          )),
-                    ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const RegisterPage(type: "Tailor")));
+                        },
+                        style: const ButtonStyle(
+                            fixedSize: MaterialStatePropertyAll(Size(150, 30)),
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.black)),
+                        child: const TextSized(
+                          text: "As Tailor",
+                          fontSize: 15,
+                        )),
                   ],
                 ),
               ),
@@ -130,6 +129,9 @@ class _SignInUpAsState extends State<SignInUpAs> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text("Already Have An Account? "),
+                    const SizedBox(
+                      width: 5,
+                    ),
                     TextButton(
                         onPressed: () {
                           // widget.showLoginPage();
@@ -140,9 +142,10 @@ class _SignInUpAsState extends State<SignInUpAs> {
                                     type: "User",
                                   )));
                         },
-                        child: const Text("Login Now",
-                            style:
-                                TextStyle(color: Color.fromARGB(255, 0, 0, 0))))
+                        child: const TextSized(
+                          text: "Login Now",
+                          fontSize: 16,
+                        ))
                   ],
                 ),
               )

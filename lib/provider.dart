@@ -8,6 +8,7 @@ class UserProvider extends ChangeNotifier {
   String? downloadUrls;
   String? authId;
   String? tailorIDs;
+  String? bookIDs;
 
   void setUserType(String type) {
     userType = type;
@@ -36,5 +37,11 @@ class UserProvider extends ChangeNotifier {
 
   void tailorID(String s) {
     tailorIDs = s;
+    // notifyListeners();
+  }
+
+  void setBookID(String bookId) {
+    bookIDs = bookId;
+    notifyListeners();
   }
 }

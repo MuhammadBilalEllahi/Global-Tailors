@@ -56,10 +56,11 @@ class _HiddenMenuDrawerState extends State<HiddenMenuDrawer> {
               baseStyle: myBaseTextStyle,
               selectedStyle: myActiveTextStyle),
           IconButton(
+              // color: Theme.of(context).splashColor,
               onPressed: () {
                 signout(context);
               },
-              icon: const Icon(Icons.logout)))
+              icon: const Icon(color: Colors.black, Icons.logout)))
     ];
     // TODO: implement initState
     super.initState();

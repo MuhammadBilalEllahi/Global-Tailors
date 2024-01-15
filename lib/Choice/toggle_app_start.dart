@@ -32,7 +32,7 @@ class Start extends StatefulWidget {
 
 class _StartState extends State<Start> {
   bool showSplashPage = true;
-  late Future<bool> reviewStatus = fetchReviewStatus();
+  late Future<bool>? reviewStatus;
 
   // NotificationServices notificationServices = NotificationServices();
   @override
@@ -142,7 +142,7 @@ class _StartState extends State<Start> {
             }
             return Scaffold(
               body: Container(
-                color: Colors.white70,
+                color: Theme.of(context).canvasColor.withOpacity(0.7),
                 child: Center(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -153,11 +153,14 @@ class _StartState extends State<Start> {
                       style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).bannerTheme.backgroundColor),
+                          color: Theme.of(context).primaryColorLight),
                     ),
-                    Icon(
-                      Icons.sentiment_very_satisfied_sharp,
-                      color: Theme.of(context).bannerTheme.backgroundColor,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.sentiment_very_satisfied_sharp,
+                        color: Theme.of(context).primaryColorLight,
+                      ),
                     )
                   ],
                 )),

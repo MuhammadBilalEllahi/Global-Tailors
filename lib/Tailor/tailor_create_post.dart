@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -90,28 +91,72 @@ class _CreatePostState extends State<CreatePost> {
                 // print(Provider.of<UserProvider>(context, listen: false)
                 //     .pickedFiles);
                 if (_titleEditingController.text.isNotEmpty &&
-                    _contentEditingController.text.isNotEmpty) {
-                  if (Provider.of<UserProvider>(context, listen: false)
-                          .pickedFiles !=
-                      null) {
-                    await uploadImageToFireStorage(
-                        Provider.of<UserProvider>(context, listen: false)
-                            .pickedFiles!);
-                  }
-                  firestore
-                      .collection("tailor_posts")
-                      .doc(firebaseAuth.currentUser!.uid)
-                      .collection('posts')
-                      .doc()
-                      .set({
-                    "title": _titleEditingController.text,
-                    "content": _contentEditingController.text,
-                    "img": Provider.of<UserProvider>(context, listen: false)
-                        .downloadUrls
-                        .toString(),
-                    "T-ID": Provider.of<UserProvider>(context, listen: false)
-                        .tailorIDs,
+                    _contentEditingController.text.isNotEmpty &&
+                    Provider.of<UserProvider>(context, listen: false)
+                            .pickedFiles !=
+                        null) {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          title: Text(
+                              "Please Wait While we upload. Continue your Work"),
+                        );
+                      });
+                  // if (Provider.of<UserProvider>(context, listen: false)
+                  //         .pickedFiles !=
+                  //     null) {
+                  await uploadImageToFireStorage(
+                          Provider.of<UserProvider>(context, listen: false)
+                              .pickedFiles!)
+                      .then((value) {
+                    firestore
+                        .collection("tailor_posts")
+                        .doc(firebaseAuth.currentUser!.uid)
+                        .collection('posts')
+                        .doc()
+                        .set({
+                      "title": _titleEditingController.text,
+                      "content": _contentEditingController.text,
+                      "img": Provider.of<UserProvider>(context, listen: false)
+                          .downloadUrls
+                          .toString(),
+                      "T-ID": Provider.of<UserProvider>(context, listen: false)
+                          .tailorIDs,
+                      "uid": firebaseAuth.currentUser!.uid,
+                      "like": 0,
+                      'timestamp': Timestamp.now()
+                    });
+                    firestore
+                        .collection("tailor_posts")
+                        .doc(firebaseAuth.currentUser!.uid)
+                        .set({"uid_posts": firebaseAuth.currentUser!.uid});
+                  }).whenComplete(() {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const AlertDialog(
+                            title: Text("Uploaded"),
+                          );
+                        });
+                  }).onError((error, stackTrace) {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const AlertDialog(
+                            title: Text("Failed Upload"),
+                          );
+                        });
                   });
+                  // }
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          title: Text("Please Fill All Fields"),
+                        );
+                      });
                 }
                 // Provider.of<UserProvider>(context, listen: false).pickedFile;
 

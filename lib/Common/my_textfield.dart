@@ -17,9 +17,11 @@ class myTextField extends StatelessWidget {
     this.width,
     this.padZero,
     this.keybordType,
+    this.validatorForm,
   }) : _textEditingController = textEditingController;
 
   final TextEditingController _textEditingController;
+  final FormFieldValidator<String>? validatorForm;
   final String label;
   final bool focus;
   final bool obscureTextBool;
@@ -44,7 +46,7 @@ class myTextField extends StatelessWidget {
           style: TextStyle(color: Theme.of(context).primaryColorLight),
           controller: _textEditingController,
           autofocus: focus,
-          validator: validator,
+          validator: validatorForm ?? validator,
           readOnly: readOnly,
           keyboardType: keybordType,
 
@@ -138,14 +140,16 @@ class _MyPhoneTextFieldState extends State<MyPhoneTextField> {
           keyboardType: TextInputType.phone,
           ignoreBlank: false,
           autoValidateMode: AutovalidateMode.disabled,
-          selectorTextStyle: const TextStyle(color: Colors.black),
-          textStyle: const TextStyle(color: Colors.black),
+          selectorTextStyle:
+              TextStyle(color: Theme.of(context).primaryColorLight),
+          textStyle: TextStyle(color: Theme.of(context).primaryColorLight),
           inputDecoration: InputDecoration(
             fillColor: Colors.green,
             errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 10),
             border: widget.inputBorder ?? const UnderlineInputBorder(),
             labelText: widget.label,
-            labelStyle: const TextStyle(fontSize: 16),
+            labelStyle: TextStyle(
+                fontSize: 16, color: Theme.of(context).primaryColorLight),
           ),
         ),
       ),
