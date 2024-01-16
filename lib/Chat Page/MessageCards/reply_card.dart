@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
+import 'package:tailor_flutter/provider.dart';
 
 class ReplyMessageCard extends StatelessWidget {
   const ReplyMessageCard(
@@ -24,7 +26,7 @@ class ReplyMessageCard extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width/1.5,
+          maxWidth: MediaQuery.of(context).size.width / 1.5,
         ),
         child: GestureDetector(
           onLongPress: () {
@@ -77,6 +79,7 @@ class ReplyMessageCard extends StatelessWidget {
                         onPressed: () async {
                           try {
                             // String uid = '';
+                            // getTailorIDSnapForOrder(context);
 
                             var orderDocRef = firestore
                                 .collection("users")
@@ -95,20 +98,88 @@ class ReplyMessageCard extends StatelessWidget {
                                         .get())
                                     .data()?['book_id'] ??
                                 0;
+                            var tailorShopName = (await firestore
+                                        .collection("users")
+                                        .doc(firebaseAuth.currentUser!.uid)
+                                        .collection("tailor_info")
+                                        .doc(firebaseAuth.currentUser!.uid)
+                                        .get())
+                                    .data()?['tailor_shop_name'] ??
+                                "No ShopName";
+                            var tailorLocation = (await firestore
+                                        .collection("users")
+                                        .doc(firebaseAuth.currentUser!.uid)
+                                        .collection("tailor_info")
+                                        .doc(firebaseAuth.currentUser!.uid)
+                                        .get())
+                                    .data()?['tailor_location'] ??
+                                "No Location";
 
                             if (orderDoc.exists) {
                               // Document already exists, update the data without incrementing book_id
-                              await orderDocRef.update({
-                                "data": text,
-                                "customer_uid": uid,
-                              }, );
+                              await orderDocRef.update(
+                                {
+                                  "data": text,
+                                  "customer_uid": uid,
+                                  "status": "pending",
+                                  "timestamp": Timestamp.now(),
+                                },
+                              ).then((value) {
+                                firestore
+                                    .collection("orders")
+                                    .doc(uid)
+                                    .collection("customer_order")
+                                    .doc()
+                                    .set({
+                                  "c_uid": uid,
+                                  "t_uid": firebaseAuth.currentUser!.uid,
+                                  "t_name":
+                                      firebaseAuth.currentUser?.displayName ??
+                                          firebaseAuth.currentUser!.email,
+                                  "c_order_list": text,
+                                  "status": "pending",
+                                  "book_id": currentBookId,
+                                  "tailor_shop": tailorShopName,
+                                  "tailor_location": tailorLocation,
+                                  "t_id": Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .tailorIDs,
+                                  "timestamp": Timestamp.now()
+                                });
+                              });
                             } else {
                               // Document doesn't exist, increment book_id and add the new order data
                               await orderDocRef.set({
                                 "data": text,
-                                "book_id": currentBookId + 1,
+                                "book_id":
+                                    (int.parse(currentBookId) + 1).toString(),
                                 "customer_uid": uid,
-                              }, SetOptions(merge: true));
+                                "status": "pending",
+                                "timestamp": Timestamp.now()
+                              }, SetOptions(merge: true)).then((value) {
+                                firestore
+                                    .collection("orders")
+                                    .doc(uid)
+                                    .collection("customer_order")
+                                    .doc()
+                                    .set({
+                                  "c_uid": uid,
+                                  "t_uid": firebaseAuth.currentUser!.uid,
+                                  "t_name":
+                                      firebaseAuth.currentUser?.displayName ??
+                                          firebaseAuth.currentUser!.email,
+                                  "c_order_list": text,
+                                  "status": "pending",
+                                  "book_id":
+                                      (int.parse(currentBookId) + 1).toString(),
+                                  "tailor_shop": tailorShopName,
+                                  "tailor_location": tailorLocation,
+                                  "t_id": Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .tailorIDs,
+                                  "timestamp": Timestamp.now()
+                                });
+                              });
 
                               // Increment book_id
                               await firestore
@@ -120,8 +191,6 @@ class ReplyMessageCard extends StatelessWidget {
                                 'book_id': FieldValue.increment(1),
                               });
                             }
-
-                            // You can add additional logic here if needed
                           } catch (error) {
                             print("Error updating order: $error");
                           }

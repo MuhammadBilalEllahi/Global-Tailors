@@ -194,6 +194,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                           ? newMethod()
                                           : RegisterPage.ID_NUMBER,
                                       "uid-TID": firebaseAuth.currentUser!.uid,
+                                    }).whenComplete(() {
+                                      totalTailors();
                                     }).then((value) {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
@@ -259,6 +261,23 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Future<void> totalTailors() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await firestore.collection('users').get();
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> tailorDocuments =
+        querySnapshot.docs
+            .where((doc) => doc.data()['type'] == 'Tailor')
+            .toList();
+
+    int totalUsers = tailorDocuments.length;
+
+    firestore.collection('total_tailors').doc("1").update(
+      {
+        "total_tailors": totalUsers,
+      },
+    );
+  }
+
   Future<int> newMethod() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await firestore.collection('users').get();
@@ -271,6 +290,12 @@ class _RegisterPageState extends State<RegisterPage> {
     RegisterPage.ID_NUMBER = totalUsers + 1;
     print("----------------------------tot: $totalUsers");
     print("----------------------------totR: ${RegisterPage.ID_NUMBER}");
+
+    firestore.collection('total_tailors').doc("1").update(
+      {
+        "total_tailors": tailorDocuments.length,
+      },
+    );
     return RegisterPage.ID_NUMBER;
   }
 

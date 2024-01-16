@@ -33,9 +33,12 @@ class _TailorBottomNavigationState extends State<TailorBottomNavigation> {
 
   @override
   void initState() {
-    getTailorIDSnap();
     // TODO: implement initState
     super.initState();
+
+    getTailorIDSnap().then((value) {
+      Provider.of<UserProvider>(context, listen: false).tailorID(value!);
+    });
   }
 
   void _onItemTapped(int index) {

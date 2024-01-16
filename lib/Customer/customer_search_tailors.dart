@@ -24,7 +24,7 @@ class _TailorListFromCustomerState extends State<TailorListFromCustomer> {
   }
 
   Future<void> fetchTailorData(String area) async {
-    List<Map<String, dynamic>> result = await getTailorInArea2(area);
+    List<Map<String, dynamic>> result = await getTailorInArea3(area);
     setState(() {
       tailorData = result;
       isLoading = false;
@@ -60,6 +60,12 @@ class _TailorListFromCustomerState extends State<TailorListFromCustomer> {
             MySearchBar(
               textEditingController: textEditingController,
               title: "Search Tailors Near You",
+              trailingWidget: IconButton(
+                  onPressed: () {
+                    // enter location and search in releation to country
+                    fetchTailorData(textEditingController.text);
+                  },
+                  icon: const Icon(Icons.location_on)),
               voidCallback: () {
                 filterTailorList(textEditingController.text);
               },

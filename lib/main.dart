@@ -41,15 +41,15 @@ void main() async {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
               brightness: Brightness.light,
-              canvasColor: Colors.black87,
-              primaryColor: Colors.grey.shade700,
-              primaryColorLight: Colors.white,
-              splashColor: Colors.grey.shade700,
-              primaryColorDark: Colors.white38,
-              iconTheme: const IconThemeData(color: Colors.white),
+              canvasColor: Colors.white,
+              primaryColor: Colors.grey.shade500,
+              primaryColorLight: Colors.black,
+              splashColor: Colors.grey,
+              primaryColorDark: Colors.black45,
+              iconTheme: const IconThemeData(color: Colors.black),
               iconButtonTheme: const IconButtonThemeData(
                   style: ButtonStyle(
-                      iconColor: MaterialStatePropertyAll(Colors.white)))),
+                      iconColor: MaterialStatePropertyAll(Colors.black)))),
           darkTheme: ThemeData(
               brightness: Brightness.dark,
               canvasColor: Colors.black87,

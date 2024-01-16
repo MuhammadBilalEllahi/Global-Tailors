@@ -26,80 +26,78 @@ class _CustomerStartPageState extends State<CustomerStartPage> {
     const ProfileSettings(),
   ];
 
-  
   @override
   Widget build(BuildContext context) {
     bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0.0;
 
     return Scaffold(
-      
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       // appBar: AppBar(
       //   automaticallyImplyLeading: false,
       // ),
-      
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: _pages.elementAt(_selectedIndex)),
-      bottomNavigationBar: isKeyboardOpen ? Container() : Container(
-        color: Colors.black,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-          child: GNav(
-            rippleColor: Colors.red.shade200,
-            hoverColor: Colors.grey.shade100,
-            gap: 8,
-            activeColor: Colors.white,
-            iconSize: 24,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            duration: const Duration(milliseconds: 700),
-            tabBackgroundColor: Colors.grey.shade800,
-            color: Colors.white,
-            backgroundColor: Colors.black,
-            tabs: const [
-              GButton(
-                icon: LineIcons.history,
-                text: 'History',
+      bottomNavigationBar: isKeyboardOpen
+          ? Container()
+          : SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: GNav(
+                rippleColor: Colors.red.shade200,
+                hoverColor: Colors.grey.shade100,
+                gap: 8,
+                activeColor: Colors.white,
+                iconSize: 24,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                duration: const Duration(milliseconds: 700),
+                tabBackgroundColor: Colors.grey.shade800,
+                color: Colors.white,
+                backgroundColor: Colors.black87,
+                tabs: const [
+                  GButton(
+                    icon: LineIcons.history,
+                    text: 'History',
+                    gap: 0,
+                  ),
+                  GButton(
+                    icon: LineIcons.addToShoppingCart,
+                    text: 'Orders',
+                  ),
+                  GButton(
+                    icon: LineIcons.search,
+                    text: 'Search',
+                  ),
+                  GButton(
+                    // gap: 1,
+                    leading: CircleAvatar(
+                        // minRadius: 0,
+                        maxRadius: 12,
+                        backgroundColor: Colors.transparent,
+                        child: ImageIcon(
+                          AssetImage(
+                            "assets/measure_icon.png",
+                          ),
+                          color: Colors.white,
+                          size: 50,
+                        )),
+                    icon: LineIcons.accessibleIcon,
+                    text: 'Mesaure',
+                  ),
+                  GButton(
+                    icon: LineIcons.user,
+                    text: 'Profile',
+                  ),
+                ],
+                selectedIndex: _selectedIndex,
+                onTabChange: (index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
               ),
-              GButton(
-                icon: LineIcons.addToShoppingCart,
-                text: 'Orders',
-              ),
-              GButton(
-                icon: LineIcons.search,
-                text: 'Search',
-              ),
-              GButton(
-                // gap: 1,
-                leading: CircleAvatar(
-                    // minRadius: 0,
-                    maxRadius: 16,
-                    backgroundColor: Colors.transparent,
-                    child: ImageIcon(
-                      AssetImage(
-                        "assets/measure_icon.png",
-                      ),
-                      color: Colors.white,
-                      size: 50,
-                    )),
-                icon: LineIcons.accessibleIcon,
-                text: 'Mesaure',
-              ),
-              GButton(
-                icon: LineIcons.user,
-                text: 'Profile',
-              ),
-            ],
-            selectedIndex: _selectedIndex,
-            onTabChange: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

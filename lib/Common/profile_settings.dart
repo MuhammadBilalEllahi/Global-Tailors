@@ -8,10 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:tailor_flutter/Auth/Registration%20Page/register.dart';
 import 'package:tailor_flutter/Common/my_elevatedbutton.dart';
 import 'package:tailor_flutter/Common/my_textfield.dart';
+import 'package:tailor_flutter/Customer/Menu%20Scaffold/customer_all_pages.dart';
+import 'package:tailor_flutter/Customer/Menu%20Scaffold/sideba_menu.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
+import 'package:tailor_flutter/Tailor/tailor_bottm_navigation.dart';
 import 'package:tailor_flutter/Tailor/tailor_intro_complete_info.dart';
+import 'package:tailor_flutter/Tailor/tailor_post_screen.dart';
 import 'package:tailor_flutter/provider.dart';
 
 class ProfileSettings extends StatefulWidget {
@@ -36,10 +41,63 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   // FormFieldValidator
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  final StreamController<String?> _additionalTypeStreamController =
+      StreamController<String?>();
+  @override
+  void dispose() {
+    _additionalTypeStreamController.close();
+
+    super.dispose();
+  }
+
+  void buildProfileSettings() {
+    fetchData();
+    StreamBuilder<String?>(
+      stream: _additionalTypeStreamController.stream,
+      builder: (context, snapshot) {
+        fetchData();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator(); // Loading indicator
+        } else {
+          // Build your widget tree here
+          return const Text("");
+        }
+      },
+    );
+  }
+
+  Future<void> fetchData() async {
+    firestore
+        .collection('users')
+        .doc(firebaseAuth.currentUser!.uid)
+        .get()
+        .then((value) {
+      print("users[type] :  ${value['type']}");
+      print(
+          "users[additional_type] :  ${value.data()?.containsKey("additional_type")}");
+      if (value.data()?.containsKey("additional_type") == true) {
+        Provider.of<UserProvider>(context, listen: false)
+            .setAdditionalType(value['additional_type'].toString());
+        _additionalTypeStreamController
+            .add(value['additional_type'].toString());
+        String? userTyp2e =
+            Provider.of<UserProvider>(context, listen: false).additionalType;
+        print("UserType1 $userTyp2e");
+        // String? userType =
+        //     Provider.of<UserProvider>(context, listen: false).additionalType;
+        // print("UserType1 $userType");
+        // // Set isCustomer based on userType
+        // isTailor = (userType == 'Customer');
+      }
+    });
+  }
+
   @override
   void initState() {
     // Access userType in initState
 
+    buildProfileSettings();
+    // fetchData();
     if (Provider.of<UserProvider>(context, listen: false).userType == null) {
       getUserType().then(
         (value) {
@@ -48,6 +106,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
         },
       );
     }
+    // isTailor =
+    //     Provider.of<UserProvider>(context, listen: false).userType == "Tailor";
 
     String? userType =
         Provider.of<UserProvider>(context, listen: false).userType;
@@ -70,6 +130,10 @@ class _ProfileSettingsState extends State<ProfileSettings> {
         _phoneNumberController.text = value.toString();
       });
     }
+
+    String? userTyp2e =
+        Provider.of<UserProvider>(context, listen: false).additionalType;
+    print("UserType1 $userTyp2e");
     print("Is it tailor > $isTailor");
 
     firebaseAuth.currentUser?.photoURL;
@@ -213,6 +277,145 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       icon: const Icon(Icons.sd_storage))
                 ],
               ),
+              // MyElevatedButtom(
+              //   label: 'test button',
+              //   fontSize: 20,
+              //   onPressed: () {
+              //     totalTailorsMergeWithAdditionalTailors();
+              //   },
+              // ),
+              MyElevatedButtom(
+                // Provider.of<UserProvider>(context, listen: false)
+                //                           .isTailorOrCustomer ??
+                //                       isTailor
+                label: (isTailor)
+                    ? Provider.of<UserProvider>(context, listen: false)
+                                .additionalType ==
+                            null
+                        // "Customer"
+                        ? "Ready to become a Customer?"
+                        : Provider.of<UserProvider>(context, listen: false)
+                                    .additionalType ==
+                                "Tailor"
+                            ? Provider.of<UserProvider>(context, listen: false)
+                                        .isTailorOrCustomer ??
+                                    isTailor
+                                ? "Switch To Customer"
+                                : "Switch To Tailor"
+                            : Provider.of<UserProvider>(context, listen: false)
+                                        .isTailorOrCustomer ??
+                                    isTailor
+                                ? "Switch To Tailor"
+                                : "Switch To Customer"
+                    : Provider.of<UserProvider>(context, listen: false)
+                                .additionalType ==
+                            null
+                        // "Tailor"
+                        ? "Ready to become a Tailor?"
+                        : Provider.of<UserProvider>(context, listen: false)
+                                    .additionalType ==
+                                "Customer"
+                            ? Provider.of<UserProvider>(context, listen: false)
+                                        .isTailorOrCustomer ??
+                                    isTailor
+                                ? "Switch To Customer"
+                                : "Switch To Tailor"
+                            : Provider.of<UserProvider>(context, listen: false)
+                                        .isTailorOrCustomer ??
+                                    isTailor
+                                ? "Switch To Tailor"
+                                : "Switch To Customer",
+                fontSize: 15,
+                size: const Size(250, 50),
+                onPressed: () {
+                  // setState(() {
+                  //   isTailor = !isTailor;
+                  // });
+                  firestore
+                      .collection('users')
+                      .doc(firebaseAuth.currentUser!.uid)
+                      .get()
+                      .then((value) {
+                    print("users[type] :  ${value['type']}");
+                    print(
+                        "users[additional_type] :  ${value.data()?.containsKey("additional_type")}");
+                    // print("users[additional_type] :  ${value?['additional_type'] == null}");
+
+                    if ((value['type'].toString() == "Tailor" ||
+                            value['type'].toString() == "Customer") &&
+                        value.data()?.containsKey("additional_type") == false) {
+                      firestore
+                          .collection('users')
+                          .doc(firebaseAuth.currentUser!.uid)
+                          .set({
+                        "additional_type": isTailor ? "Customer " : "Tailor",
+                      }, SetOptions(merge: true)).then((value) {
+                        if (isTailor) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const CustomerStartPage(),
+                          ));
+                        } else {
+                          total_ID_TailorsMergeWithAdditionalTailors()
+                              .then((value) {
+                            firestore
+                                .collection('users')
+                                .doc(firebaseAuth.currentUser!.uid)
+                                .collection("ID")
+                                .doc(firebaseAuth.currentUser!.uid)
+                                .set({
+                              "ID": value.toString() ?? "Nan",
+                              "uid-TID": firebaseAuth.currentUser!.uid,
+                            }).then((value) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const TailorCompleteInfo()));
+                            });
+                          });
+                        }
+                      });
+                    } else {
+                      print(
+                          "addditional type : ${value.data()?.containsKey("additional_type")}  value: ${value['additional_type']} ");
+
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              Provider.of<UserProvider>(context, listen: false)
+                                          .isTailorOrCustomer ??
+                                      isTailor
+                                  ? const HiddenMenuDrawer()
+                                  : const TailorBottomNavigation()));
+
+                      setState(() {
+                        // isTailor = !isTailor;
+                        // Provider.of<UserProvider>(context, listen: false)
+                        //     .setISTailorOrCustomer(!isTailor);
+
+                        bool currentStatus =
+                            Provider.of<UserProvider>(context, listen: false)
+                                    .isTailorOrCustomer ??
+                                isTailor;
+
+                        // Update the value to the opposite
+                        Provider.of<UserProvider>(context, listen: false)
+                            .setISTailorOrCustomer(!currentStatus);
+                      });
+
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         value['additional_type'] == "Tailor"
+                      //             ? value['type'] == "Customer"
+                      //                 ? const HiddenMenuDrawer()
+                      //                 : const TailorBottomNavigation()
+                      //             : value['type'] == "Tailor"
+                      //                 ? const HiddenMenuDrawer()
+                      //                 : const TailorBottomNavigation()));
+                    }
+                  });
+                },
+              ),
+              // ToggleButtons(children: [IconButton(onPressed: (){}, icon: Icon(Icons.abc))], isSelected: (){
+              //   return true;
+              // }),
               isTailor
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -231,6 +434,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       ),
                     )
                   : Container(),
+
               isTailor
                   // ? Provider.of<UserProvider>(context, listen: false).bookIDs !=
                   //         null
@@ -562,4 +766,52 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           });
     });
   }
+}
+
+Future<void> totalTailorsMergeWithAdditionalTailors() async {
+  QuerySnapshot<Map<String, dynamic>> querySnapshot =
+      await firestore.collection('users').get();
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> tailorDocuments =
+      querySnapshot.docs
+          .where((doc) => doc.data()['type'] == 'Tailor')
+          .toList();
+
+  QuerySnapshot<Map<String, dynamic>> totalAdditionalTailorsQuery =
+      await firestore.collection('users').get();
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> totalAdditionalTailorsDoc =
+      totalAdditionalTailorsQuery.docs
+          .where((doc) => doc.data()['additional_type'] == 'Tailor')
+          .toList();
+
+  int totalUsers = totalAdditionalTailorsDoc.length;
+
+  firestore.collection('total_tailors').doc("1").update(
+    {
+      "total_tailors_additional": "$totalUsers",
+    },
+  );
+}
+
+Future<int> total_ID_TailorsMergeWithAdditionalTailors() async {
+  QuerySnapshot<Map<String, dynamic>> querySnapshot =
+      await firestore.collection('users').get();
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> tailorDocuments =
+      querySnapshot.docs
+          .where((doc) => doc.data()['type'] == 'Tailor')
+          .toList();
+
+  QuerySnapshot<Map<String, dynamic>> totalAdditionalTailorsQuery =
+      await firestore.collection('users').get();
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> totalAdditionalTailorsDoc =
+      totalAdditionalTailorsQuery.docs
+          .where((doc) => doc.data()['additional_type'] == 'Tailor')
+          .toList();
+
+  int totalUsers =
+      tailorDocuments.length + totalAdditionalTailorsDoc.length + 1;
+
+  firestore.collection('total_tailors').doc("1").update({
+    "total_tailors_additional": "${totalAdditionalTailorsDoc.length + 1}",
+  });
+  return totalUsers;
 }

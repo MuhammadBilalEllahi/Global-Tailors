@@ -9,6 +9,8 @@ class UserProvider extends ChangeNotifier {
   String? authId;
   String? tailorIDs;
   String? bookIDs;
+  String? additionalType;
+  bool? isTailorOrCustomer;
 
   void setUserType(String type) {
     userType = type;
@@ -43,5 +45,15 @@ class UserProvider extends ChangeNotifier {
   void setBookID(String bookId) {
     bookIDs = bookId;
     notifyListeners();
+  }
+
+  void setAdditionalType(String typeAd) {
+    additionalType = typeAd;
+    notifyListeners();
+  }
+
+  void setISTailorOrCustomer(bool toc) {
+    isTailorOrCustomer = toc;
+    // notifyListeners();
   }
 }

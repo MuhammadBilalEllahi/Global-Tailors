@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 import 'package:tailor_flutter/Choice/lets_get_started_page.dart';
+import 'package:tailor_flutter/Common/profile_settings.dart';
 import 'package:tailor_flutter/Customer/Menu%20Scaffold/customer_all_pages.dart';
 import 'package:tailor_flutter/FireBase/firebase.dart';
 import 'package:tailor_flutter/Tailor/tailor_bottm_navigation.dart';
@@ -69,7 +70,16 @@ class _HiddenMenuDrawerState extends State<HiddenMenuDrawer> {
   @override
   Widget build(BuildContext context) {
     return HiddenDrawerMenu(
-      backgroundColorMenu: Colors.grey.shade300,
+      backgroundColorAppBar: Theme.of(context).splashColor,
+      // backgroundColorContent: Theme.of(context).primaryColor.withGreen(200),
+      actionsAppBar: [
+        IconButton(
+            onPressed: () {
+              signout(context);
+            },
+            icon: const Icon(Icons.login_rounded))
+      ],
+      backgroundColorMenu: Theme.of(context).primaryColor.withGreen(200),
       screens: _pages,
       initPositionSelected: 0,
       slidePercent: 40,

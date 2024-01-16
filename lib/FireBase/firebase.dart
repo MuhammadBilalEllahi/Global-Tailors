@@ -4,8 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:tailor_flutter/Auth/LoginPage/login.dart';
 import 'package:tailor_flutter/Choice/lets_get_started_page.dart';
+import 'package:tailor_flutter/provider.dart';
 
 final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -170,6 +172,36 @@ Future<String?> getTailorIDSnap() async {
       print(firstDocument.reference.id);
       print(data);
       print(data['ID']);
+
+      return data['ID'].toString();
+    } else {
+      // Handle the case where no documents are found
+      return 'No Tailor ID';
+    }
+  } catch (e) {
+    // Handle any errors that occurred during the process
+    print("Error: $e");
+    return null;
+  }
+}
+
+Future<String?> getTailorIDSnapForOrder(context) async {
+  try {
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection("ID")
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      var firstDocument = querySnapshot.docs.first;
+      Map<String, dynamic> data = firstDocument.data();
+      print(firstDocument.reference);
+      print(firstDocument.reference.id);
+      print(data);
+      print(data['ID']);
+      Provider.of<UserProvider>(context, listen: false)
+          .tailorID("T-${data['ID']}");
 
       return data['ID'].toString();
     } else {
@@ -391,6 +423,7 @@ Future<List<Map<String, dynamic>>> getTailorInArea2(String area) async {
   StreamSubscription<QuerySnapshot> subscription = firestore
       .collection('users')
       .where('type', isEqualTo: "Tailor")
+      // .where('additional_type', isEqualTo: "Tailor")
       .snapshots()
       .listen((QuerySnapshot querySnapshot) async {
     print("Data is >> $querySnapshot");
@@ -413,8 +446,11 @@ Future<List<Map<String, dynamic>>> getTailorInArea2(String area) async {
       print("Tailor Location: ${tailorInfoDoc['tailor_location']}");
       print("\n");
 
-      var filteredTailorInfoDocs = tailorInfoSnapshot.docs
-          .where((doc) => doc['tailor_location'] == area);
+      var filteredTailorInfoDocs = tailorInfoSnapshot.docs.where((doc) =>
+          doc['tailor_location']
+              .toString()
+              .toLowerCase()
+              .contains(area.toString().toLowerCase()));
 
       for (var tailorInfoDoc in filteredTailorInfoDocs) {
         print(
@@ -447,6 +483,72 @@ Future<List<Map<String, dynamic>>> getTailorInArea2(String area) async {
 
   // Return the result
   return result;
+}
+
+Future<List<Map<String, dynamic>>> getTailorInArea3(String area) async {
+  print("objectINNN");
+
+  try {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
+        .collection('users')
+        .where('type', isEqualTo: "Tailor")
+        .get();
+
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> documents =
+        querySnapshot.docs;
+
+    List<List<Map<String, dynamic>>> resultList =
+        await Future.wait(documents.map(
+      (docs) async {
+        print("All tailor determined uid ${docs.reference.id}");
+
+        var tailorInfoSnapshot = await firestore
+            .collection('users')
+            .doc(docs.id)
+            .collection('tailor_info')
+            .get();
+
+        var tailorIDSnapshot = await firestore
+            .collection('users')
+            .doc(docs.id)
+            .collection('ID')
+            .get();
+
+        print("current determined uid ${docs.reference.id}");
+
+        return tailorInfoSnapshot.docs
+            .where((doc) => doc['tailor_location']
+                .toString()
+                .toLowerCase()
+                .contains(area.toString().toLowerCase()))
+            .map((tailorInfoDoc) {
+          print(
+              ">Filtered Tailor Location: ${tailorInfoDoc['tailor_location']} uid ${tailorInfoDoc.id}");
+
+          var tailorIDDoc = tailorIDSnapshot.docs.firstWhere(
+            (idDoc) => idDoc.id == tailorInfoDoc.id,
+          );
+
+          return {
+            'location': tailorInfoDoc['tailor_location'],
+            'shop_name': tailorInfoDoc['tailor_shop_name'],
+            'name': tailorInfoDoc['tailor_name'],
+            'uid': docs.reference.id,
+            't_id': tailorIDDoc['ID'].toString(),
+          };
+        }).toList();
+      },
+    ));
+
+    List<Map<String, dynamic>> flattenedResultList =
+        resultList.expand((element) => element).toList();
+
+    print("Data > $flattenedResultList");
+    return flattenedResultList;
+  } catch (e) {
+    print("Error fetching tailor data: $e");
+    return [];
+  }
 }
 
 // Future<String?> getUserType() async {
