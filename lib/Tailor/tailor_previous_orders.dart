@@ -235,35 +235,59 @@ class PreviousOrders extends StatelessWidget {
                                                                       .collection(
                                                                           "customer_order")
                                                                       .where(
-                                                                          "data",
+                                                                          "c_order_list",
                                                                           isEqualTo: order
                                                                               .data)
                                                                       .where(
                                                                           "c_uid",
-                                                                          isEqualTo:
-                                                                              order.customerUid)
-                                                                      .get();
+                                                                          isEqualTo: order
+                                                                              .customerUid)
+                                                                      .get()
+                                                                      .whenComplete(
+                                                                          () {
+                                                                    print(
+                                                                        "Good");
+                                                                  }).then(
+                                                                          (querySnapshot) {
+                                                                    for (var doc
+                                                                        in querySnapshot
+                                                                            .docs) {
+                                                                      doc.reference
+                                                                          .update({
+                                                                        "status":
+                                                                            "complete",
+                                                                        "time_complete":
+                                                                            Timestamp.now()
+                                                                      });
+                                                                    }
+                                                                    print(
+                                                                        "the val $querySnapshot");
+                                                                  }).whenComplete(
+                                                                          () {
+                                                                    print(
+                                                                        "Done");
+                                                                  });
 
-                                                                  for (var doc
-                                                                      in query
-                                                                          .docs) {
-                                                                    await firestore
-                                                                        .collection(
-                                                                            "orders")
-                                                                        .doc(order
-                                                                            .customerUid)
-                                                                        .collection(
-                                                                            "customer_order")
-                                                                        .doc(doc
-                                                                            .id)
-                                                                        .update({
-                                                                      "status":
-                                                                          "complete",
-                                                                      "time_complete":
-                                                                          Timestamp
-                                                                              .now()
-                                                                    });
-                                                                  }
+                                                                  // for (var doc
+                                                                  //     in query
+                                                                  //         .docs) {
+                                                                  //   await firestore
+                                                                  //       .collection(
+                                                                  //           "orders")
+                                                                  //       .doc(order
+                                                                  //           .customerUid)
+                                                                  //       .collection(
+                                                                  //           "customer_order")
+                                                                  //       .doc(doc
+                                                                  //           .id)
+                                                                  //       .update({
+                                                                  //     "status":
+                                                                  //         "complete",
+                                                                  //     "time_complete":
+                                                                  //         Timestamp
+                                                                  //             .now()
+                                                                  //   });
+                                                                  // }
                                                                 })
                                                           ],
                                                         ),

@@ -151,8 +151,7 @@ class ReplyMessageCard extends StatelessWidget {
                               // Document doesn't exist, increment book_id and add the new order data
                               await orderDocRef.set({
                                 "data": text,
-                                "book_id":
-                                    (int.parse(currentBookId) + 1).toString(),
+                                "book_id": currentBookId + 1,
                                 "customer_uid": uid,
                                 "status": "pending",
                                 "timestamp": Timestamp.now()
@@ -170,8 +169,7 @@ class ReplyMessageCard extends StatelessWidget {
                                           firebaseAuth.currentUser!.email,
                                   "c_order_list": text,
                                   "status": "pending",
-                                  "book_id":
-                                      (int.parse(currentBookId) + 1).toString(),
+                                  "book_id": currentBookId + 1,
                                   "tailor_shop": tailorShopName,
                                   "tailor_location": tailorLocation,
                                   "t_id": Provider.of<UserProvider>(context,
