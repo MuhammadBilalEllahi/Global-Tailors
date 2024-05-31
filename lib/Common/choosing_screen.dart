@@ -80,7 +80,10 @@ class _SignInUpAsState extends State<SignInUpAs> {
                           fixedSize: MaterialStatePropertyAll(Size(150, 30)),
                           backgroundColor:
                               MaterialStatePropertyAll(Colors.black)),
-                      child: const TextSized(text: "As Customer", fontSize: 15),
+                      child: const TextSized(
+                          textColor: Colors.white,
+                          text: "As Customer",
+                          fontSize: 15),
                     ),
                     const SizedBox(
                       height: 5,
@@ -96,6 +99,7 @@ class _SignInUpAsState extends State<SignInUpAs> {
                             backgroundColor:
                                 MaterialStatePropertyAll(Colors.black)),
                         child: const TextSized(
+                          textColor: Colors.white,
                           text: "As Tailor",
                           fontSize: 15,
                         )),

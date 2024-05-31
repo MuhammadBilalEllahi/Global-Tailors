@@ -41,7 +41,8 @@ void main() async {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
               brightness: Brightness.light,
-              canvasColor: Colors.white,
+              secondaryHeaderColor: Colors.white,
+              // canvasColor: Colors.white,
               primaryColor: Colors.grey.shade500,
               primaryColorLight: Colors.black,
               splashColor: Colors.grey,
@@ -53,6 +54,7 @@ void main() async {
           darkTheme: ThemeData(
               brightness: Brightness.dark,
               canvasColor: Colors.black87,
+              // secondaryHeaderColor: Colors.white,
               primaryColor: Colors.grey.shade700,
               primaryColorLight: Colors.white,
               splashColor: Colors.grey.shade700,
